@@ -10,7 +10,7 @@ mousePos = {
     context = canvas.getContext('2d'),
     particles = [],
     rockets = [],
-    MAX_PARTICLES = 100,
+    MAX_PARTICLES = 150,
     colorCode = 0;
 
 // init

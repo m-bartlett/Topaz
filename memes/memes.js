@@ -77,7 +77,7 @@ function loop() {
         // update and render
         
         rockets[i].update();
-        //rockets[i].render(context);
+        rockets[i].render(context);
 
         // calculate distance with Pythagoras
         var distance = Math.sqrt(Math.pow(mousePos.x - rockets[i].pos.x, 2) + Math.pow(mousePos.y - rockets[i].pos.y, 2));

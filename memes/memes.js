@@ -39,7 +39,7 @@ function launch() {
 
 
 function launchFrom(x) {
-    if (particles.length < 20) context.clearRect(0, 0, canvas.width, canvas.height);
+    if (particles.length <= 50) context.clearRect(0, 0, canvas.width, canvas.height);
     if (rockets.length < 10) {                
         //context.clearRect(0, 0, canvas.width, canvas.height);
         var rocket = new Rocket(x);

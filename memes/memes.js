@@ -11,7 +11,8 @@ mousePos = {
     particles = [],
     rockets = [],
     MAX_PARTICLES = 150,
-    colorCode = 0;
+    colorCode = 0,
+    explosions = 0;
 
 // init
 $(document).ready(function() {
@@ -39,7 +40,7 @@ function launch() {
 
 
 function launchFrom(x) {
-	if (particles.length <= 40) context.clearRect(0, 0, canvas.width, canvas.height);
+	if (particles.length <= 40 && explosions > 4) context.clearRect(0, 0, canvas.width, canvas.height);
 	if (rockets.length < 10) {                
         //context.clearRect(0, 0, canvas.width, canvas.height);
         var rocket = new Rocket(x);
@@ -206,6 +207,7 @@ Rocket.prototype = new Particle();
 Rocket.prototype.constructor = Rocket;
 
 Rocket.prototype.explode = function() {
+	explosions++;
 	var count = Math.random() * 10 + 80;
 
 	for (var i = 0; i < count; i++) {

@@ -18,7 +18,7 @@ $(document).ready(function() {
 	document.body.appendChild(canvas);
 	canvas.width = SCREEN_WIDTH;
 	canvas.height = SCREEN_HEIGHT;
-	setInterval(launch, 400);
+	setInterval(launch, 1000);
 	setInterval(loop, 1000 / 50);
 });
 
@@ -39,7 +39,10 @@ function launch() {
 
 
 function launchFrom(x) {
-	if (particles.length <= 40 || rockets.length < 2) context.clearRect(0, 0, canvas.width, canvas.height);
+	if (particles.length <= 40 || rockets.length < 2) { 
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        if (rockets[0]) rockets[0].explode();
+    }
 	if (rockets.length < 10) {                
         //context.clearRect(0, 0, canvas.width, canvas.height);
         var rocket = new Rocket(x);
@@ -65,7 +68,7 @@ function loop() {
 
     // clear canvas
     context.save();
-    context.globalAlpha = 0.05;
+    context.globalAlpha = 0.1;
     context.globalCompositeOperation='destination-out';
     context.fillStyle= '#FFF';
     context.fillRect(0,0,canvas.width, canvas.height);      			
@@ -92,7 +95,7 @@ function loop() {
             - close to the mouse
             - 1% chance of random explosion
             */
-            if (rockets[i].pos.y < SCREEN_HEIGHT / 5 || rockets[i].vel.y >= 0 || distance < 50 || randomChance) {            
+            if (rockets[i].pos.y < SCREEN_HEIGHT / 5 || rockets[i].vel.y >= 0 || distance < 30 || randomChance) {            
             	rockets[i].explode();
             } else {
             	existingRockets.push(rockets[i]);
@@ -246,8 +249,8 @@ Rocket.prototype.render = function(c) {
 	r = this.size / 5;
 
 	var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
-	gradient.addColorStop(0.1, "rgba(255, 255, 255 ," + this.alpha + ")");
-	gradient.addColorStop(1, "rgba(0, 0, 0, " + this.alpha + ")");
+	gradient.addColorStop(0.1, "rgba(255, 255, 255 ," + 1 + ")");
+	gradient.addColorStop(1, "rgba(0, 0, 0, " + 1 + ")");
 
 	c.fillStyle = gradient;
 

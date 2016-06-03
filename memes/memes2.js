@@ -10,7 +10,7 @@ mousePos = {
     context = canvas.getContext('2d'),
     particles = [],
     rockets = [],
-    MAX_PARTICLES = 100,
+    MAX_PARTICLES = 400,
     colorCode = 0;
 
 // init
@@ -64,12 +64,12 @@ function loop() {
     }
 
     // clear canvas
-    context.save();
-    context.globalAlpha = 0.05;
-    context.globalCompositeOperation='destination-out';
-    context.fillStyle= '#FFF';
-    context.fillRect(0,0,canvas.width, canvas.height);      			
-    context.restore();
+    //context.save();
+    //context.globalAlpha = 0.05;
+    //context.globalCompositeOperation='destination-out';
+    //context.fillStyle= '#FFF';
+    //context.fillRect(0,0,canvas.width, canvas.height);      			
+    //context.restore();
 
 
     var existingRockets = [];

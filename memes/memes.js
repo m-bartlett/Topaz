@@ -251,8 +251,7 @@ Rocket.prototype.render = function(c) {
 	c.fillStyle = gradient;
 
 	c.beginPath();
-	c.arc(this.pos.x, this.pos.y, this.flick ? 0 : r, 0, Math.PI * 2, true);
-	c.
+	c.arc(this.pos.x, this.pos.y, this.flick ? 0 : r, 0, Math.PI * 2, true);	
 	c.closePath();
 	c.fill();
 

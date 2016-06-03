@@ -1,9 +1,9 @@
 var SCREEN_WIDTH = window.innerWidth,
-    SCREEN_HEIGHT = window.innerHeight,
-    mousePos = {
-        x: 400,
-        y: 300
-    },
+SCREEN_HEIGHT = window.innerHeight,
+mousePos = {
+	x: 400,
+	y: 300
+},
 
     // create canvas
     canvas = document.createElement('canvas'),
@@ -15,32 +15,32 @@ var SCREEN_WIDTH = window.innerWidth,
 
 // init
 $(document).ready(function() {
-    document.body.appendChild(canvas);
-    canvas.width = SCREEN_WIDTH;
-    canvas.height = SCREEN_HEIGHT;
-    setInterval(launch, 800);
-    setInterval(loop, 1000 / 50);
+	document.body.appendChild(canvas);
+	canvas.width = SCREEN_WIDTH;
+	canvas.height = SCREEN_HEIGHT;
+	setInterval(launch, 800);
+	setInterval(loop, 1000 / 50);
 });
 
 // update mouse position
 $(document).mousemove(function(e) {
-    e.preventDefault();
-    mousePos = {
-        x: e.clientX,
-        y: e.clientY
-    };
+	e.preventDefault();
+	mousePos = {
+		x: e.clientX,
+		y: e.clientY
+	};
 });
 
 // launch more rockets!!!
 function launch() {
-    launchFrom(SCREEN_WIDTH/2);
+	launchFrom(SCREEN_WIDTH/2);
 }
 
 
 
 function launchFrom(x) {
-    if (particles.length <= 50) context.clearRect(0, 0, canvas.width, canvas.height);
-    if (rockets.length < 10) {                
+	if (particles.length <= 50) context.clearRect(0, 0, canvas.width, canvas.height);
+	if (rockets.length < 10) {                
         //context.clearRect(0, 0, canvas.width, canvas.height);
         var rocket = new Rocket(x);
         rocket.explosionColor = Math.floor(Math.random() * 360 / 10) * 10;
@@ -56,19 +56,19 @@ function launchFrom(x) {
 function loop() {
     // update screen size
     if (SCREEN_WIDTH != window.innerWidth) {
-        canvas.width = SCREEN_WIDTH = window.innerWidth;
+    	canvas.width = SCREEN_WIDTH = window.innerWidth;
     }
     if (SCREEN_HEIGHT != window.innerHeight) {
-        canvas.height = SCREEN_HEIGHT = window.innerHeight;
+    	canvas.height = SCREEN_HEIGHT = window.innerHeight;
     }
 
     // clear canvas
-   			context.save();
-        context.globalAlpha = 0.05;
-  			context.globalCompositeOperation='destination-out';
-  			context.fillStyle= '#FFF';
-  			context.fillRect(0,0,canvas.width, canvas.height);      			
-        context.restore();
+    context.save();
+    context.globalAlpha = 0.05;
+    context.globalCompositeOperation='destination-out';
+    context.fillStyle= '#FFF';
+    context.fillRect(0,0,canvas.width, canvas.height);      			
+    context.restore();
 
 
     var existingRockets = [];
@@ -77,7 +77,7 @@ function loop() {
         // update and render
         
         rockets[i].update();
-        //rockets[i].render(context);
+        rockets[i].render(context);
 
         // calculate distance with Pythagoras
         var distance = Math.sqrt(Math.pow(mousePos.x - rockets[i].pos.x, 2) + Math.pow(mousePos.y - rockets[i].pos.y, 2));
@@ -90,26 +90,26 @@ function loop() {
             - going down
             - close to the mouse
             - 1% chance of random explosion
-        */
-        if (rockets[i].pos.y < SCREEN_HEIGHT / 5 || rockets[i].vel.y >= 0 || distance < 50 || randomChance) {            
-            rockets[i].explode();
-        } else {
-            existingRockets.push(rockets[i]);
+            */
+            if (rockets[i].pos.y < SCREEN_HEIGHT / 5 || rockets[i].vel.y >= 0 || distance < 50 || randomChance) {            
+            	rockets[i].explode();
+            } else {
+            	existingRockets.push(rockets[i]);
+            }
         }
-    }
-    
 
-    rockets = existingRockets;
 
-    var existingParticles = [];
+        rockets = existingRockets;
 
-    for (var i = 0; i < particles.length; i++) {
-        particles[i].update();
+        var existingParticles = [];
+
+        for (var i = 0; i < particles.length; i++) {
+        	particles[i].update();
 
         // render and save particles that can be rendered
         if (particles[i].exists()) {            
-            particles[i].render(context);
-            existingParticles.push(particles[i]);
+        	particles[i].render(context);
+        	existingParticles.push(particles[i]);
         }
     }
 
@@ -117,30 +117,30 @@ function loop() {
     particles = existingParticles;
 
     while (particles.length > MAX_PARTICLES) {
-        particles.shift();
+    	particles.shift();
     }
 }
 
 function Particle(pos) {
-    this.pos = {
-        x: pos ? pos.x : 0,
-        y: pos ? pos.y : 0
-    };
-    this.vel = {
-        x: 0,
-        y: 0
-    };
-    this.shrink = .97;
-    this.size = 2;
+	this.pos = {
+		x: pos ? pos.x : 0,
+		y: pos ? pos.y : 0
+	};
+	this.vel = {
+		x: 0,
+		y: 0
+	};
+	this.shrink = .97;
+	this.size = 2;
 
-    this.resistance = 1;
-    this.gravity = 0;
+	this.resistance = 1;
+	this.gravity = 0;
 
-    this.flick = false;
+	this.flick = false;
 
-    this.alpha = 1;
-    this.fade = 0;
-    this.color = 0;
+	this.alpha = 1;
+	this.fade = 0;
+	this.color = 0;
 }
 
 Particle.prototype.update = function() {
@@ -163,54 +163,54 @@ Particle.prototype.update = function() {
 };
 
 Particle.prototype.render = function(c) {
-    if (!this.exists()) {
-        return;
-    }
+	if (!this.exists()) {
+		return;
+	}
 
-    c.save();
+	c.save();
 
-    c.globalCompositeOperation = 'lighter';
+	c.globalCompositeOperation = 'lighter';
 
-    var x = this.pos.x,
-        y = this.pos.y,
-        r = this.size / 2;
+	var x = this.pos.x,
+	y = this.pos.y,
+	r = this.size / 2;
 
-    var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
-    gradient.addColorStop(0.1, "rgba(255,255,255," + this.alpha + ")");
-    gradient.addColorStop(0.8, "hsla(" + this.color + ", 100%, 50%, " + this.alpha + ")");
-    gradient.addColorStop(1, "hsla(" + this.color + ", 100%, 50%, 0.1)");
+	var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
+	gradient.addColorStop(0.1, "rgba(255,255,255," + this.alpha + ")");
+	gradient.addColorStop(0.8, "hsla(" + this.color + ", 100%, 50%, " + this.alpha + ")");
+	gradient.addColorStop(1, "hsla(" + this.color + ", 100%, 50%, 0.1)");
 
-    c.fillStyle = gradient;
+	c.fillStyle = gradient;
 
-    c.beginPath();
-    c.arc(this.pos.x, this.pos.y, this.flick ? Math.random() * this.size : this.size, 0, Math.PI * 2, true);
-    c.closePath();
-    c.fill();
+	c.beginPath();
+	c.arc(this.pos.x, this.pos.y, this.flick ? Math.random() * this.size : this.size, 0, Math.PI, true);
+	c.closePath();
+	c.fill();
 
-    c.restore();
+	c.restore();
 };
 
 Particle.prototype.exists = function() {
-    return this.alpha >= 0.5 && this.size >= 1;
+	return this.alpha >= 0.5 && this.size >= 1;
 };
 
 function Rocket(x) {
-    Particle.apply(this, [{
-        x: x,
-        y: SCREEN_HEIGHT}]);
+	Particle.apply(this, [{
+		x: x,
+		y: SCREEN_HEIGHT}]);
 
-    this.explosionColor = 0;
+	this.explosionColor = 0;
 }
 
 Rocket.prototype = new Particle();
 Rocket.prototype.constructor = Rocket;
 
 Rocket.prototype.explode = function() {
-    var count = Math.random() * 10 + 80;
+	var count = Math.random() * 10 + 80;
 
-    for (var i = 0; i < count; i++) {
-        var particle = new Particle(this.pos);
-        var angle = Math.random() * Math.PI * 2;
+	for (var i = 0; i < count; i++) {
+		var particle = new Particle(this.pos);
+		var angle = Math.random() * Math.PI * 2;
 
         // emulate 3D effect by using cosine and put more particles in the middle
         var speed = Math.cos(Math.random() * Math.PI / 2) * 15;
@@ -232,28 +232,28 @@ Rocket.prototype.explode = function() {
 };
 
 Rocket.prototype.render = function(c) {
-    if (!this.exists()) {
-        return;
-    }
+	if (!this.exists()) {
+		return;
+	}
 
-    c.save();
+	c.save();
 
-    c.globalCompositeOperation = 'lighter';
+	c.globalCompositeOperation = 'lighter';
 
-    var x = this.pos.x,
-        y = this.pos.y,
-        r = this.size / 5;
+	var x = this.pos.x,
+	y = this.pos.y,
+	r = this.size / 5;
 
-    var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
-    gradient.addColorStop(0.1, "rgba(255, 255, 255 ," + this.alpha + ")");
-    gradient.addColorStop(1, "rgba(0, 0, 0, " + this.alpha + ")");
+	var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
+	gradient.addColorStop(0.1, "rgba(255, 255, 255 ," + this.alpha + ")");
+	gradient.addColorStop(1, "rgba(0, 0, 0, " + this.alpha + ")");
 
-    c.fillStyle = gradient;
+	c.fillStyle = gradient;
 
-    c.beginPath();
-    c.arc(this.pos.x, this.pos.y, this.flick ? 0 : r, 0, Math.PI * 2, true);
-    c.closePath();
-    c.fill();
+	c.beginPath();
+	c.arc(this.pos.x, this.pos.y, this.flick ? 0 : r, 0, Math.PI * 2, true);
+	c.closePath();
+	c.fill();
 
-    c.restore();
+	c.restore();
 };

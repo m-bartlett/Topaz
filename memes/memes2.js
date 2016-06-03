@@ -55,7 +55,7 @@ function launchFrom(x) {
 
 function loop() {
     // update screen size
-    
+    context.clearRect(0, 0, canvas.width, canvas.height);
     if (SCREEN_WIDTH != window.innerWidth) {
     	canvas.width = SCREEN_WIDTH = window.innerWidth;
     }

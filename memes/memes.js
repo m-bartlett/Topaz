@@ -18,7 +18,7 @@ $(document).ready(function() {
 	document.body.appendChild(canvas);
 	canvas.width = SCREEN_WIDTH;
 	canvas.height = SCREEN_HEIGHT;
-	setInterval(launch, 1000);
+	setInterval(launch, 500);
 	setInterval(loop, 1000 / 50);
 });
 

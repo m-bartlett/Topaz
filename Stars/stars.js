@@ -36,7 +36,7 @@ $(function(){
     fps:15,
     full:true,
     starCount:30,
-    minDistance:250,
+    minDistance:300,
     speed:0.01,
     start:function() {
       this.canvas.css('background-color','black');

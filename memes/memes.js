@@ -11,7 +11,8 @@ mousePos = {
     particles = [],
     rockets = [],
     MAX_PARTICLES = 100,
-    colorCode = 0;
+    colorCode = 0,
+    exp = 0;
 
 // init
 $(document).ready(function() {
@@ -91,7 +92,7 @@ function loop() {
             - close to the mouse
             - 1% chance of random explosion
             */
-            if (rockets[i].pos.y < SCREEN_HEIGHT / 5 || rockets[i].vel.y >= 0 || distance < 50 || randomChance) {            
+            if (rockets[i].pos.y < SCREEN_HEIGHT / 5 || rockets[i].vel.y >= 0 || distance < 50 || randomChance || exp < 3) {            
             	rockets[i].explode();
             } else {
             	existingRockets.push(rockets[i]);
@@ -206,6 +207,7 @@ Rocket.prototype = new Particle();
 Rocket.prototype.constructor = Rocket;
 
 Rocket.prototype.explode = function() {
+	exp++;
 	var count = Math.random() * 10 + 80;
 
 	for (var i = 0; i < count; i++) {

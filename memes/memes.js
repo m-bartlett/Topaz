@@ -10,7 +10,7 @@ mousePos = {
     context = canvas.getContext('2d'),
     particles = [],
     rockets = [],
-    MAX_PARTICLES = 100,
+    MAX_PARTICLES = 150,
     colorCode = 0;
 
 // init
@@ -252,6 +252,7 @@ Rocket.prototype.render = function(c) {
 
 	c.beginPath();
 	c.arc(this.pos.x, this.pos.y, this.flick ? 0 : r, 0, Math.PI * 2, true);
+	c.
 	c.closePath();
 	c.fill();
 

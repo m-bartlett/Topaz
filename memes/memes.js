@@ -39,7 +39,7 @@ function launch() {
 
 
 function launchFrom(x) {
-	if (particles.length <= 50) context.clearRect(0, 0, canvas.width, canvas.height);
+	if (particles.length <= 40) context.clearRect(0, 0, canvas.width, canvas.height);
 	if (rockets.length < 10) {                
         //context.clearRect(0, 0, canvas.width, canvas.height);
         var rocket = new Rocket(x);
@@ -183,7 +183,7 @@ Particle.prototype.render = function(c) {
 	c.fillStyle = gradient;
 
 	c.beginPath();
-	c.arc(this.pos.x, this.pos.y, this.flick ? Math.random() * this.size : this.size, 0, Math.PI, true);
+	c.arc(this.pos.x, this.pos.y, this.flick ? Math.random() * this.size : this.size, 0, Math.PI * 2, true);
 	c.closePath();
 	c.fill();
 
@@ -236,7 +236,7 @@ Rocket.prototype.render = function(c) {
 		return;
 	}
 
-	c.save();
+	//c.save();
 
 	c.globalCompositeOperation = 'lighter';
 
@@ -255,5 +255,5 @@ Rocket.prototype.render = function(c) {
 	c.closePath();
 	c.fill();
 
-	c.restore();
+	//c.restore();
 };

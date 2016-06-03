@@ -10,7 +10,7 @@ var SCREEN_WIDTH = window.innerWidth,
     context = canvas.getContext('2d'),
     particles = [],
     rockets = [],
-    MAX_PARTICLES = 400,
+    MAX_PARTICLES = 100,
     colorCode = 0;
 
 // init
@@ -39,8 +39,9 @@ function launch() {
 
 
 function launchFrom(x) {
-    if (rockets.length == 0) setTimeout(context.clearRect(0, 0, canvas.width, canvas.height), 5000);
-	if (rockets.length < 2) {        
+    if (rockets.length == 0) context.clearRect(0, 0, canvas.width, canvas.height);
+    if (rockets.length < 20) {                
+        //context.clearRect(0, 0, canvas.width, canvas.height);
         var rocket = new Rocket(x);
         rocket.explosionColor = Math.floor(Math.random() * 360 / 10) * 10;
         rocket.vel.y = Math.random() * -3 - 4;
@@ -190,7 +191,7 @@ Particle.prototype.render = function(c) {
 };
 
 Particle.prototype.exists = function() {
-    return this.alpha >= 0.1 && this.size >= 1;
+    return this.alpha >= 0.5 && this.size >= 1;
 };
 
 function Rocket(x) {
@@ -241,7 +242,7 @@ Rocket.prototype.render = function(c) {
 
     var x = this.pos.x,
         y = this.pos.y,
-        r = this.size / 2;
+        r = this.size / 5;
 
     var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
     gradient.addColorStop(0.1, "rgba(255, 255, 255 ," + this.alpha + ")");
@@ -250,7 +251,7 @@ Rocket.prototype.render = function(c) {
     c.fillStyle = gradient;
 
     c.beginPath();
-    c.arc(this.pos.x, this.pos.y, this.flick ? Math.random() * this.size / 2 + this.size / 2 : this.size, 0, Math.PI * 2, true);
+    c.arc(this.pos.x, this.pos.y, this.flick ? 0 : r, 0, Math.PI * 2, true);
     c.closePath();
     c.fill();
 

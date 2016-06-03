@@ -73,10 +73,6 @@ function loop() {
 
     var existingRockets = [];
 
-    if (rockets.length==1) {
-    	rocket[0].explode();
-    }
-
     for (var i = 0; i < rockets.length; i++) {
         // update and render
         

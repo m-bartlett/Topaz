@@ -167,7 +167,7 @@ Particle.prototype.render = function(c) {
 		return;
 	}
 
-	//c.save();
+	c.save();
 
 	c.globalCompositeOperation = 'lighter';
 
@@ -187,7 +187,7 @@ Particle.prototype.render = function(c) {
 	c.closePath();
 	c.fill();
 
-	//c.restore();
+	c.restore();
 };
 
 Particle.prototype.exists = function() {

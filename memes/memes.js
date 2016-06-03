@@ -39,8 +39,8 @@ function launch() {
 
 
 function launchFrom(x) {
-    if (rockets.length == 0) context.clearRect(0, 0, canvas.width, canvas.height);
-    if (rockets.length < 20) {                
+    if (rockets.length < 2) context.clearRect(0, 0, canvas.width, canvas.height);
+    if (rockets.length < 10) {                
         //context.clearRect(0, 0, canvas.width, canvas.height);
         var rocket = new Rocket(x);
         rocket.explosionColor = Math.floor(Math.random() * 360 / 10) * 10;

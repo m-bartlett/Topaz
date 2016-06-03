@@ -236,7 +236,7 @@ Rocket.prototype.render = function(c) {
 		return;
 	}
 
-	//c.save();
+	c.save();
 
 	c.globalCompositeOperation = 'lighter';
 
@@ -255,5 +255,5 @@ Rocket.prototype.render = function(c) {
 	//c.closePath();
 	c.fill();
 
-	//c.restore();
+	c.restore();
 };

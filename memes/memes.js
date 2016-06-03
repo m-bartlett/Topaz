@@ -66,9 +66,9 @@ function loop() {
     	canvas.height = SCREEN_HEIGHT = window.innerHeight;
     }
 
-    // clear canvas
+    // fade canvas
     context.save();
-    context.globalAlpha = 0.1;
+    context.globalAlpha = 0.15;
     context.globalCompositeOperation='destination-out';
     context.fillStyle= '#FFF';
     context.fillRect(0,0,canvas.width, canvas.height);      			

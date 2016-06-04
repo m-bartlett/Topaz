@@ -12,8 +12,8 @@ var SCREEN_WIDTH = window.innerWidth,
   FPS = 60,
   stars = 300,
   minDistance = 100,
-  speed = 5,
-  thick = 4,
+  speed = 8,
+  thick = 2.5,
   G = 200;
 
 // init
@@ -100,7 +100,7 @@ Dot.prototype.update = function() {
 };
 
 Dot.prototype.render = function(c) {
-  c.save();
+  //c.save();
 
   //c.globalCompositeOperation = 'soft-light';
 
@@ -145,7 +145,7 @@ Dot.prototype.render = function(c) {
     c.strokeStyle = grd;
     c.stroke();
 
-    c.restore();    
+    //c.restore();    
     this.ids.add(i);
     dots[i].ids.add(this.id);
   }

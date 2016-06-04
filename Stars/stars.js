@@ -33,11 +33,11 @@ Star.prototype.draw = function(game) {
 $(function(){
   (new Topaz({
     title:"Stars",
-    fps:15,
+    fps:60,
     full:true,
-    starCount:30,
-    minDistance:300,
-    speed:0.01,
+    starCount:300,
+    minDistance:100,
+    speed:0.02,
     start:function() {
       this.canvas.css('background-color','black');
       // this.canvas.css('cursor','none');

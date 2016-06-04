@@ -1,8 +1,8 @@
 var SCREEN_WIDTH = window.innerWidth,
   SCREEN_HEIGHT = window.innerHeight,
   mousePos = {
-    x: 0,
-    y: 0
+    x: SCREEN_WIDTH/2,
+    y: SCREEN_HEIGHT/2
   },
 
   // create canvas
@@ -10,12 +10,12 @@ var SCREEN_WIDTH = window.innerWidth,
   context = canvas.getContext('2d'),
   dots = [],
   FPS = 60,
-  stars = 300,
-  lines = 7;
-  minDistance = 75,
+  stars = 500,
+  lines = 3;
+  minDistance = 50,
   speed = 5,
-  thick = 4,
-  G = 200;
+  thick = 2.5,
+  G = 500;
 
 // init
 $(document).ready(function() {
@@ -75,16 +75,22 @@ function Dot(ID) {
 
 Dot.prototype.update = function() {
   // update position based on speed
-  //var distance = Math.sqrt(Math.pow(this.pos.x - mousePos.x, 2) + Math.pow(this.pos.y - mousePos.y, 2)); 
- 
-  // if (distance <= minDistance) {
-  //   this.pos.x -= this.vel.x*(1-(distance / minDistance))*speed;
-  //   this.pos.y -= this.vel.y*(1-(distance / minDistance))*speed;
-  // }
+  var distance = Math.sqrt(Math.pow(this.pos.x - mousePos.x, 2) + Math.pow(this.pos.y - mousePos.y, 2)), 
+      X = this.vel.x, 
+      Y = this.vel.y,
+      Gx=0, 
+      Gy=0;
+   
+   if (distance <= minDistance) {
+     this.pos.x -= this.vel.x*(1-(distance / minDistance))*speed;
+     this.pos.y -= this.vel.y*(1-(distance / minDistance))*speed;
+   }   
+   else {
+       Gx = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.x - mousePos.x),
+       Gy = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.y - mousePos.y);
+     }
+   
 
-   //var xd = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.x - mousePos.x),
-   //    yd = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.y - mousePos.y);
-   X = this.vel.x, Y = this.vel.y;
     for (let d of this.ids) {
       X += dots[d].vel.x;
       Y += dots[d].vel.y;
@@ -93,11 +99,11 @@ Dot.prototype.update = function() {
    Y /= (this.ids.size+1);    
    this.vel.x = X;
    this.vel.y = Y;
-   this.pos.x += this.vel.x;
-   this.pos.y += this.vel.y;  
+   this.pos.x += X-Gx
+   this.pos.y += Y-Gy
   
-  //this.vel.x -= xd;
-  //this.vel.y -= yd;
+  //this.vel.x -= Gx;
+  //this.vel.y -= Gy;
   if (this.pos.x <= 0 || this.pos.x >= SCREEN_WIDTH) this.vel.x *= -1;
   if (this.pos.y <= 0 || this.pos.y >= SCREEN_HEIGHT) this.vel.y *= -1;
 };

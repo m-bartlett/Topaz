@@ -9,11 +9,12 @@ var SCREEN_WIDTH = window.innerWidth,
   canvas = document.createElement('canvas'),
   context = canvas.getContext('2d'),
   dots = [],
-  FPS = 30,
-  stars = 100,
-  minDistance = 50,
-  speed = 4,
-  thick = 5;
+  FPS = 60,
+  stars = 300,
+  minDistance = 100,
+  speed = 5,
+  thick = 4,
+  G = 200;
 
 // init
 $(document).ready(function() {
@@ -26,14 +27,14 @@ $(document).ready(function() {
   }
 });
 
-// update mouse position
-// $(document).mousemove(function(e) {
-//  e.preventDefault();
-//  mousePos = {
-//    x: e.clientX,
-//    y: e.clientY
-//  };
-// });
+//update mouse position
+$(document).mousemove(function(e) {
+ e.preventDefault();
+ mousePos = {
+   x: e.clientX,
+   y: e.clientY
+ };
+});
 
 function loop() {
   // update screen size    
@@ -73,23 +74,35 @@ function Dot(ID) {
 
 Dot.prototype.update = function() {
   // update position based on speed
-  var X = this.vel.x, Y = this.vel.y;
-  for (let d of this.ids) {
-    X += dots[d].vel.x;
-    Y += dots[d].vel.y;
-  }  
-  this.vel.x = X/(this.ids.size+1);
-  this.vel.y = Y/(this.ids.size+1);
-  this.pos.x += this.vel.x;
-  this.pos.y += this.vel.y;
+  // var distance = Math.sqrt(Math.pow(this.pos.x - mousePos.x, 2) + Math.pow(this.pos.y - mousePos.y, 2)); 
+  // if (distance <= minDistance) distance = 0;
+  // var xd = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.x - mousePos.x),
+  //     yd = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.y - mousePos.y);
+  X = this.vel.x, Y = this.vel.y;
+   for (let d of this.ids) {
+     X += dots[d].vel.x;
+     Y += dots[d].vel.y;
+   }  
+  X /= (this.ids.size+1);
+  Y /= (this.ids.size+1);  
+  // X *= 1+(xd/G);
+  // Y *= 1+(yd/G);
+  this.pos.x += X;
+  this.pos.y += Y;
+  //this.pos.x += xd  
+  //this.pos.y += yd
+  //this.vel.x = X
+  //this.vel.y = Y
+  //this.vel.x -= xd;
+  //this.vel.y -= yd;
   if (this.pos.x <= 0 || this.pos.x >= SCREEN_WIDTH) this.vel.x *= -1;
   if (this.pos.y <= 0 || this.pos.y >= SCREEN_HEIGHT) this.vel.y *= -1;
 };
 
 Dot.prototype.render = function(c) {
-  //c.save();
+  c.save();
 
-  c.globalCompositeOperation = 'lighten';
+  //c.globalCompositeOperation = 'soft-light';
 
   var x = this.pos.x,
     y = this.pos.y;
@@ -132,7 +145,7 @@ Dot.prototype.render = function(c) {
     c.strokeStyle = grd;
     c.stroke();
 
-    //c.restore();    
+    c.restore();    
     this.ids.add(i);
     dots[i].ids.add(this.id);
   }

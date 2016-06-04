@@ -11,10 +11,11 @@ var SCREEN_WIDTH = window.innerWidth,
   dots = [],
   FPS = 60,
   stars = 300,
+  lines = 7;
   minDistance = 75,
   speed = 5,
   thick = 4,
-  G = 3*minDistance;
+  G = 200;
 
 // init
 $(document).ready(function() {
@@ -74,13 +75,15 @@ function Dot(ID) {
 
 Dot.prototype.update = function() {
   // update position based on speed
-  var distance = Math.sqrt(Math.pow(this.pos.x - mousePos.x, 2) + Math.pow(this.pos.y - mousePos.y, 2)); 
-  if (distance <= minDistance) {
-    this.pos.x += this.vel.x*(1-(distance / minDistance))*speed;
-    this.pos.y += this.vel.y*(1-(distance / minDistance))*speed;
-  }
-  // var xd = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.x - mousePos.x),
-  //     yd = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.y - mousePos.y);
+  //var distance = Math.sqrt(Math.pow(this.pos.x - mousePos.x, 2) + Math.pow(this.pos.y - mousePos.y, 2)); 
+ 
+  // if (distance <= minDistance) {
+  //   this.pos.x -= this.vel.x*(1-(distance / minDistance))*speed;
+  //   this.pos.y -= this.vel.y*(1-(distance / minDistance))*speed;
+  // }
+
+   //var xd = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.x - mousePos.x),
+   //    yd = distance == 0 ? 0 : G/Math.pow(distance,2)*(this.pos.y - mousePos.y);
    X = this.vel.x, Y = this.vel.y;
     for (let d of this.ids) {
       X += dots[d].vel.x;
@@ -88,10 +91,11 @@ Dot.prototype.update = function() {
     }  
    X /= (this.ids.size+1);
    Y /= (this.ids.size+1);    
-   this.pos.x += X;
-   this.pos.y += Y;  
-  //this.vel.x = (this.vel.x+X)/2
-  //this.vel.y = (this.vel.y+Y)/2
+   this.vel.x = X;
+   this.vel.y = Y;
+   this.pos.x += this.vel.x;
+   this.pos.y += this.vel.y;  
+  
   //this.vel.x -= xd;
   //this.vel.y -= yd;
   if (this.pos.x <= 0 || this.pos.x >= SCREEN_WIDTH) this.vel.x *= -1;
@@ -113,6 +117,7 @@ Dot.prototype.render = function(c) {
       y2 = dots[i].pos.y,
       distance = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
     if (distance > minDistance) continue;
+    if (this.ids.size > lines) continue;
     
     if (this.ids.has(dots[i].ids) || dots[i].ids.has(this.ids)) {
       this.ids.add(i);
@@ -147,11 +152,5 @@ Dot.prototype.render = function(c) {
     //c.restore();    
     this.ids.add(i);
     dots[i].ids.add(this.id);
-  }
-  if (this.ids.size == 0) {
-    c.beginPath();
-    c.arc(x, y, thick / 2, 0, 2 * Math.PI);
-    c.fillStyle = 'rgba(255,64,0,1)';
-    c.fill();
   }
 };

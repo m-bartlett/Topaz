@@ -46,7 +46,8 @@ function launchFrom(x) {
 	if (rockets.length < 10) {                
         //context.clearRect(0, 0, canvas.width, canvas.height);
         var rocket = new Rocket(x);
-        rocket.explosionColor = Math.floor(Math.random() * 360 / 10) * 10;
+        //rocket.explosionColor = Math.floor(Math.random() * 360 / 10) * 10;
+        rocket.explosionColor = Math.random() * 360;
         rocket.vel.y = Math.random() * -3 - 4;
         rocket.vel.x = Math.random() * 6 - 3;
         rocket.size = 8;
@@ -118,11 +119,7 @@ function loop() {
     }
 
     // update array with existing particles - old particles should be garbage collected
-    particles = existingParticles;
-
-    while (particles.length > MAX_PARTICLES) {
-    	particles.shift();
-    }
+    particles = existingParticles.slice(-1*MAX_PARTICLES);
 }
 
 function Particle(pos) {
@@ -182,7 +179,7 @@ Particle.prototype.render = function(c) {
 	var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
 	gradient.addColorStop(0.1, "rgba(255,255,255," + this.alpha + ")");
 	gradient.addColorStop(0.8, "hsla(" + this.color + ", 100%, 50%, " + this.alpha + ")");
-	gradient.addColorStop(1, "hsla(" + this.color + ", 100%, 50%, 0.1)");
+	gradient.addColorStop(1, "hsla(" + this.color + ", 100%, 75%, 0.1)");
 
 	c.fillStyle = gradient;
 
@@ -210,7 +207,8 @@ Rocket.prototype = new Particle();
 Rocket.prototype.constructor = Rocket;
 
 Rocket.prototype.explode = function() {
-	var count = Math.random() * 10 + 80;
+	//var count = Math.random() * MAX_PARTICLES;
+    var count = Math.random() *MAX_PARTICLES/3 + MAX_PARTICLES/3;
 
 	for (var i = 0; i < count; i++) {
 		var particle = new Particle(this.pos);

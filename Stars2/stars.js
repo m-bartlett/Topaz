@@ -11,8 +11,8 @@ var SCREEN_WIDTH = window.innerWidth,
   dots = [],
   FPS = 60,
   stars = 300,
-  minDistance = 100,
-  speed = 8,
+  minDistance = 75,
+  speed = 5,
   thick = 2.5,
   G = 200;
 
@@ -49,7 +49,7 @@ function loop() {
 
   for (var i = 0; i < stars; i++) {
     dots[i].update();
-    dots[i].render(context);
+    dots[i].render(context);  
   }
   for (var i = 0; i < stars; i++) dots[i].ids.clear();
 }

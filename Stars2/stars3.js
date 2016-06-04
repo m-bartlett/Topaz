@@ -10,7 +10,7 @@ var SCREEN_WIDTH = window.innerWidth,
   context = canvas.getContext('2d'),
   dots = [],
   FPS = 60,
-  stars = 500,
+  stars = 300,
   lines = 3;
   minDistance = 50,
   speed = 5,
@@ -120,12 +120,12 @@ Dot.prototype.render = function(c) {
 
 
   for (var i = 0; i < stars; i++) {
+    if (this.ids.size > lines) break;
     if (i == this.id || dots[i].ids.has(this.id) || this.ids.has(i)) continue;
     var x2 = dots[i].pos.x,
       y2 = dots[i].pos.y,
       distance = Math.sqrt(Math.pow(x - x2, 2) + Math.pow(y - y2, 2));
-    if (distance > minDistance) continue;
-    if (this.ids.size > lines) continue;
+    if (distance > minDistance) continue;    
     
     if (this.ids.has(dots[i].ids) || dots[i].ids.has(this.ids)) {
       this.ids.add(i);

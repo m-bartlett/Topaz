@@ -9,11 +9,14 @@ var SCREEN_WIDTH = window.innerWidth,
   canvas = document.createElement('canvas'),
   context = canvas.getContext('2d'),
   dots = [],
-  FPS = 60,
+  FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
   stars = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 100 : 300,
-  minDistance = 75,
+  //minDistance = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 75 : 100,
+  minDiv=15,
+  minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv,
   speed = 5,
   thick = 2.5,
+  lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 5 : 10,
   G = 200;
 
 // init
@@ -40,9 +43,11 @@ function loop() {
   // update screen size    
   if (SCREEN_WIDTH != window.innerWidth) {
     canvas.width = SCREEN_WIDTH = window.innerWidth;
+    minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv20;
   }
   if (SCREEN_HEIGHT != window.innerHeight) {
     canvas.height = SCREEN_HEIGHT = window.innerHeight;
+    minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv;
   }
 
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -73,6 +78,7 @@ function Dot(ID) {
 }
 
 Dot.prototype.update = function() {
+  
   // update position based on speed
   // var distance = Math.sqrt(Math.pow(this.pos.x - mousePos.x, 2) + Math.pow(this.pos.y - mousePos.y, 2)); 
   // if (distance <= minDistance) distance = 0;
@@ -95,8 +101,19 @@ Dot.prototype.update = function() {
   //this.vel.y = Y
   //this.vel.x -= xd;
   //this.vel.y -= yd;
-  if (this.pos.x <= 0 || this.pos.x >= SCREEN_WIDTH) this.vel.x *= -1;
-  if (this.pos.y <= 0 || this.pos.y >= SCREEN_HEIGHT) this.vel.y *= -1;
+    if (this.pos.x <= 0) this.vel.x *= (this.vel.x > 0 ? 1 : -1);
+  if (this.pos.x >= SCREEN_WIDTH) { this.vel.x *= (this.vel.x < 0 ? 1 : -1); this.pos.x=SCREEN_WIDTH; }  
+  if (this.pos.y <= 0) this.vel.y *= (this.vel.y > 0 ? 1 : -1);
+  if (this.pos.y >= SCREEN_HEIGHT) { this.vel.y *= (this.vel.y < 0 ? 1 : -1); this.pos.y=SCREEN_HEIGHT } 
+
+  // if (this.pos.x <= 0 || this.pos.x >= SCREEN_WIDTH) { 
+  //   this.pos.x = this.pos.x >= SCREEN_WIDTH ? SCREEN_WIDTH : 0; 
+  //   this.vel.x *= -1; 
+  // }
+  // if (this.pos.y <= 0 || this.pos.y >= SCREEN_HEIGHT) {
+  //   this.pos.y = this.pos.y >= SCREEN_HEIGHT ? SCREEN_HEIGHT : 0; 
+  //   this.vel.y *= -1;
+  // }
 };
 
 Dot.prototype.render = function(c) {
@@ -109,6 +126,7 @@ Dot.prototype.render = function(c) {
 
 
   for (var i = 0; i < stars; i++) {
+    if (lines > 0 && this.ids.size > lines) break;
     if (i == this.id || dots[i].ids.has(this.id) || this.ids.has(i)) continue;
     var x2 = dots[i].pos.x,
       y2 = dots[i].pos.y,

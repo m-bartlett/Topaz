@@ -46,7 +46,11 @@ $(function(){
     console.log(e.target.value);
     console.log(e.target.id)
   });
+  $('input[type="checkbox"]').change(function(e){
+    console.log(e.target.value);    
+  });
 })
+
 
 function loop() {
   // update screen size

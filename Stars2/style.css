@@ -17,14 +17,20 @@ aside {
   position: absolute;
   /* This sets the edges to the edges of it's parent. Or something. Depends on the position. */
   left: 0;
-  right: 0;  
+  right: 0;
 }
 
 /* This is how you'd select the sliders if you need it I guess. */
 input[type="range"] {
   /* Setting flex grow causes these to expand as big as they can get. */
-  flex-grow: 1;
-  min-width: 5px;
+  flex-grow: 3;
+  min-width: 30px;
+}
+
+input[type="checkbox"] {
+  /* Setting flex grow causes these to expand as big as they can get. */
+  min-width: 15px;
+  max-width: 15px;
 }
 
 /* Eventually the canvas, I suppose. */

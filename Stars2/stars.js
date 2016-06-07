@@ -17,7 +17,10 @@ var SCREEN_WIDTH = window.innerWidth,
   speed = 3,
   thick = 5,
   lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 5 : 10,
-  G = 200;
+  G = 200,
+  gravity = false;
+  showDots = true;
+  tether =false;
 
 // init
 $(document).ready(function() {
@@ -51,12 +54,13 @@ $(document).mousemove(function(e) {
 $(function(){
   $('input[type="range"]').change(function(e){
     // You can get the value of the input that changed here! I probably should have kept the ids on them so that you'd be able to get that to figure out which slider changed.
-    console.log(e.target.value);
-    console.log(e.target.id)
+    window[e.target.id] = e.target.value;
+    console.log(e.target.id+" -> "+e.target.value);
   });
   $('input[type="checkbox"]').change(function(e){
-    console.log(e.target.value);
-    console.log(e.target.checked);    
+    //console.log(e.target.value);
+    //console.log(e.target.checked);  
+    window[e.target.value] = e.target.checked;    
   });
 })
 
@@ -71,9 +75,9 @@ function loop() {
   
   context.clearRect(0, 0, canvas.width, canvas.height);
 
-  for (var i = 0; i < stars; i++) dots[i].update();
-  for (var i = 0; i < stars; i++) dots[i].ids.clear();
-  for (var i = 0; i < stars; i++) dots[i].render(context); 
+  for (var i = 0; i < dots.size; i++) dots[i].update();
+  for (var i = 0; i < dots.size; i++) dots[i].ids.clear();
+  for (var i = 0; i < dots.size; i++) dots[i].render(context); 
   
 }
 
@@ -124,7 +128,7 @@ Dot.prototype.render = function(c) {
     y = this.pos.y;
 
 
-  for (var i = 0; i < stars; i++) {
+  for (var i = 0; i < dots.size; i++) {
     if (lines > 0 && this.ids.size > lines) break;
     if (i == this.id || dots[i].ids.has(this.id) || this.ids.has(i)) continue;
     var x2 = dots[i].pos.x,

@@ -18,15 +18,15 @@
 		<!-- Aside is generally used for sidebars or things that should be away from the other shit. We'll go with that for controls. -->
 		<aside>
 			<!-- You only really need ids if you're going to be accessing them individually, but in an array you've got indexes anyway. -->
-			<input id="stars" style = "width: 2000px" type="range" min="25" max="600" value="100">
-			<input id="minDiv" style = "width: 2000px" type="range" min="1" max="50" value="20">
-			<input id="speed" style = "width: 2000px" type="range" min="1" max="20" value="5">
-			<input id="thick" style = "width: 2000px" type="range" step="0.5" min="1" max="10" value="3.5">
-			<input id="lines" style = "width: 2000px" type="range" min="0" max="25" value="5">
-			<input id="G" style = "width: 2000px" type="range" min="0" max="500" value="200">
+			<input id="stars"  type="range" min="25" max="600" value="0">
+			<input id="minDiv"  type="range" min="1" max="50" value="20">
+			<input id="speed"  type="range" min="1" max="20" value="5">
+			<input id="thick"  type="range" step="0.5" min="1" max="10" value="3.5">
+			<input id="lines"  type="range" min="0" max="25" value="5">
+			<input id="G"  type="range" min="0" max="500" value="200">
 			<input type="checkbox" name="gravity" value="gravity">Gravity
-      		<input type="checkbox" name="gradients" value="gradients">Gradients
-      		<input type="checkbox" name="dots" value="dots">Dots
+      		<input type="checkbox" checked="true" name="dots" value="dots">Dots
+      		<input type="checkbox" name="tether" value="tether">Tethering
 		</aside>
 		<section id="canvas" />
 	</main>

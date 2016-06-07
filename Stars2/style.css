@@ -40,5 +40,5 @@ input[type="checkbox"] {
   height: 100%;
   /* This is to see the canvas for debugging. */
   /*background: transparent;*/
-  background-image: url("2memes.jpg");
+  background-image: url("memes.jpg");
 }

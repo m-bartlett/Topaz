@@ -10,13 +10,13 @@ var SCREEN_WIDTH = window.innerWidth,
   context = canvas.getContext('2d'),
   dots = [],
   FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
-  stars = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 100 : 50,
+  stars = 50,
   //minDistance = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 75 : 100,
   minDiv=10,
   minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv,
   speed = 3,
   thick = 5,
-  lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 5 : 0,
+  lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 5 : 10,
   G = 200;
 
 // init
@@ -24,12 +24,20 @@ $(document).ready(function() {
   document.getElementById('canvas').appendChild(canvas);
   canvas.width = SCREEN_WIDTH;
   canvas.height = SCREEN_HEIGHT;
+  document.getElementById('stars').value = stars;
+  document.getElementById('minDiv').value = minDiv;
+  document.getElementById('speed').value = speed;
+  document.getElementById('thick').value = thick;
+  document.getElementById('lines').value = lines;
+  document.getElementById('G').value = G;
   setInterval(loop, 1000 / FPS);
+  
   for (var i = 0; i < stars; i++) {
     dots.push(new Dot(i));
   }
+  
   console.log("DONE!");
-});
+ });
 
 //update mouse position
 $(document).mousemove(function(e) {
@@ -47,22 +55,20 @@ $(function(){
     console.log(e.target.id)
   });
   $('input[type="checkbox"]').change(function(e){
-    console.log(e.target.value);    
+    console.log(e.target.value);
+    console.log(e.target.checked);    
   });
 })
 
 
 function loop() {
   // update screen size
-  if (SCREEN_WIDTH != window.innerWidth) {
+  if (SCREEN_WIDTH != window.innerWidth || SCREEN_HEIGHT != window.innerHeight) {
     canvas.width = SCREEN_WIDTH = window.innerWidth;
-    minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv;
-  }
-  if (SCREEN_HEIGHT != window.innerHeight) {
     canvas.height = SCREEN_HEIGHT = window.innerHeight;
     minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv;
   }
-
+  
   context.clearRect(0, 0, canvas.width, canvas.height);
 
   for (var i = 0; i < stars; i++) dots[i].update();
@@ -161,5 +167,3 @@ Dot.prototype.render = function(c) {
     dots[i].ids.add(this.id);
   }
 };
-
-/////////////////////////////////////////////////////

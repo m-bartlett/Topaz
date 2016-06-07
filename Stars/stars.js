@@ -37,7 +37,7 @@ $(function(){
     full:true,
     starCount:300,
     minDistance:100,
-    speed:0.02,
+    speed:0.01,
     start:function() {
       this.canvas.css('background-color','black');
       // this.canvas.css('cursor','none');

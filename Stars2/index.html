@@ -1,10 +1,31 @@
 <!doctype HTML>
 <html>
-  <head>
-    <title>Topaz</title>
-    <meta charset="UTF-8">
-    <style> body { height:100vh; margin:0px; overflow:hidden; text-align: center; } canvas { background-image: url("memes.jpg"); height:100%; } </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="./stars.js"></script>
-  </head>
+<head>
+	<title>Stars</title>
+	<meta charset="UTF-8">
+	<!-- Style it up -->
+	<link rel='stylesheet' type='text/css' href='./style.css'>
+	<!-- Grab some jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<!-- Throw in stars -->
+	<script src="./stars.js"></script>
+</head>
+<!-- Actual content on the page goes in the body tag -->
+<body>
+	<!-- Semantically, if you're going to have a "main content" container, you should use main. -->
+	<!-- Div is really only used for non-semantic generic containers. Try to avoid it when there's a better option -->
+	<main>
+		<!-- Aside is generally used for sidebars or things that should be away from the other shit. We'll go with that for controls. -->
+		<aside>
+			<!-- You only really need ids if you're going to be accessing them individually, but in an array you've got indexes anyway. -->
+			<input id="stars" style = "width: 2000px" type="range" min="25" max="600" value="100">
+			<input id="minDiv" style = "width: 2000px" type="range" min="1" max="50" value="20">
+			<input id="speed" style = "width: 2000px" type="range" min="1" max="20" value="5">
+			<input id="thick" style = "width: 2000px" type="range" step="0.5" min="1" max="10" value="3.5">
+			<input id="lines" style = "width: 2000px" type="range" min="0" max="25" value="5">
+			<input id="G" style = "width: 2000px" type="range" min="0" max="500" value="200">
+		</aside>
+		<section id="canvas" />
+	</main>
+</body>
 </html>

@@ -16,8 +16,8 @@ var SCREEN_WIDTH = window.innerWidth,
   minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv,
   speed = 3,
   thick = 5,
-  lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 5 : 10,
-  G = 200,
+  lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 5 : 5,
+  G = 100,
   gravity = false;
   showDots = true;
   tether = false;
@@ -27,17 +27,9 @@ $(document).ready(function() {
   document.getElementById('canvas').appendChild(canvas);
   canvas.width = SCREEN_WIDTH;
   canvas.height = SCREEN_HEIGHT;
-  document.getElementById('stars').value = stars;
-  document.getElementById('minDiv').value = minDiv;
-  document.getElementById('speed').value = speed;
-  document.getElementById('thick').value = thick;
-  document.getElementById('lines').value = lines;
-  document.getElementById('G').value = G;
-    
-  for (var i = 0; i < stars; i++) {
-    dots.push(new Dot(i));
-  }
-  
+  $('input[type="range"]').each(function(i) this.value = window[this.id]);
+  $('input[type="checkbox"]').each(function(i) this.checked = window[this.id] ? window[this.id].toString() : "");    
+  for (var i = 0; i < stars; i++) dots.push(new Dot(i));  
   setInterval(loop, 1000 / FPS);
   console.log("DONE!");
  });

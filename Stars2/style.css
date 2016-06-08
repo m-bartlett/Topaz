@@ -1,6 +1,8 @@
 /* Body has a margin, it's annoying. Fuck it. */
 body {
   margin: 0;
+  background-image: url("memes.jpg");
+  background-size:100%;
 }
 
 /* Actual main height, take up the full height. */
@@ -39,7 +41,5 @@ input[type="checkbox"] {
   width: 100%;
   height: 100%;
   /* This is to see the canvas for debugging. */
-  /*background: transparent;*/
-  background-image: url("memes.jpg");
-  background-size:100%;
+  
 }

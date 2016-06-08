@@ -1,62 +1,55 @@
 var SCREEN_WIDTH = window.innerWidth,
 SCREEN_HEIGHT = window.innerHeight,
-mousePos = {
-  x: SCREEN_WIDTH / 2,
-  y: SCREEN_HEIGHT / 2
-},
+mousePos = { x: SCREEN_WIDTH / 2, y: SCREEN_HEIGHT / 2 },
+canvas = document.createElement('canvas'),
+context = canvas.getContext('2d'),
+dots = [],
+FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
+stars = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 25 : 50,
+//minDistance = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 75 : 100,
+minDiv=10,
+minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv,
+speed = 2,
+thick = 3.5,
+//lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 3 : 5,
+lines = 10,
+G = 200,
+gravity = false;
+showDots = false;
+tether = false;  
 
-  // create canvas
-  canvas = document.createElement('canvas'),
-  context = canvas.getContext('2d'),
-  dots = [],
-  FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
-  stars = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 25 : 50,
-  //minDistance = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 75 : 100,
-  minDiv=10,
-  minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv,
-  speed = 5,
-  thick = 2.5,
-  //lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 3 : 5,
-  lines = 10,
-  G = 100,
-  gravity = false;
-  showDots = false;
-  tether = false;
-  
-  
-
-// init
+//Initialize
 $(document).ready(function() {
   document.getElementById('canvas').appendChild(canvas);
   canvas.width = SCREEN_WIDTH;
   canvas.height = SCREEN_HEIGHT;
-  $('input[type=\'range\']').each(function(i) { this.value = window[this.id] });   
+  $('input[type="range"]').each(function(i) { this.value = window[this.id] });   
   $('input[type="checkbox"]').each(function(i) { this.checked = window[this.id] ? window[this.id].toString() : "" });    
   for (var i = 0; i < stars; i++) dots.push(new Dot(i));  
-    setInterval(loop, 1000 / FPS);
-  console.log(new Date());
+  setInterval(loop, 1000 / FPS);
+  console.log(new Date().getTime());  
 });
 
 //update mouse position
 $(document).mousemove(function(e) {
  e.preventDefault();
- mousePos = {
-   x: e.clientX,
-   y: e.clientY
- };
+ mousePos = { x: e.clientX,  y: e.clientY };
 });
 
 $(function(){
   $('input[type="range"]').change(function(e){    
     if (e.target.id == 'speed') {
       for (let d of dots) {
-          d.vel.x*=e.target.value/speed;
-          d.vel.y*=e.target.value/speed;
+        d.vel.x*=e.target.value/speed;
+        d.vel.y*=e.target.value/speed;
       }
     }
+    
     window[e.target.id] = e.target.value;
     console.log(e.target.id+" -> "+e.target.value);
+
     if (e.target.id == 'minDiv') minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv;
+
     if (stars < dots.length) { dots = dots.slice(0,stars); }
     else if (stars > dots.length) for (var i = dots.length; i<stars; i++) dots.push(new Dot(i));    
   });
@@ -88,8 +81,8 @@ function loop() {
       y: Math.random() * SCREEN_HEIGHT
     };
     this.vel = { x: Math.random() * speed * (Math.round(Math.random()) ? 1 : -1), y: 0 };
-    this.vel.y = Math.random() * speed * (Math.round(Math.random()) ? 1 : -1);
-    //this.vel.y = Math.sqrt(Math.pow(speed, 2) - Math.pow(this.vel.x, 2)) * (Math.round(Math.random()) ? 1 : -1)
+    //this.vel.y = Math.random() * speed * (Math.round(Math.random()) ? 1 : -1);
+    this.vel.y = Math.sqrt(Math.pow(speed, 2) - Math.pow(this.vel.x, 2)) * (Math.round(Math.random()) ? 1 : -1)
     this.r = Math.round(Math.random() * 255);
     this.g = Math.round(Math.random() * 255);
     this.b = Math.round(Math.random() * 255);

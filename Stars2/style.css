@@ -26,7 +26,7 @@ aside {
 /* This is how you'd select the sliders if you need it I guess. */
 input[type="range"] {
   /* Setting flex grow causes these to expand as big as they can get. */
-  flex-grow: 3;
+  flex-grow: 1;
   min-width: 30px;
   background: transparent;
 }

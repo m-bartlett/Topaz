@@ -33,12 +33,12 @@ $(document).ready(function() {
   document.getElementById('thick').value = thick;
   document.getElementById('lines').value = lines;
   document.getElementById('G').value = G;
-  setInterval(loop, 1000 / FPS);
-  
+    
   for (var i = 0; i < stars; i++) {
     dots.push(new Dot(i));
   }
   
+  setInterval(loop, 1000 / FPS);
   console.log("DONE!");
  });
 
@@ -74,10 +74,10 @@ function loop() {
   }
   
   context.clearRect(0, 0, canvas.width, canvas.height);
-
-  for (var i = 0; i < dots.size; i++) dots[i].update();
-  for (var i = 0; i < dots.size; i++) dots[i].ids.clear();
-  for (var i = 0; i < dots.size; i++) dots[i].render(context); 
+  
+  for (var i = 0; i < dots.length; i++) dots[i].update();
+  for (var i = 0; i < dots.length; i++) dots[i].ids.clear();
+  for (var i = 0; i < dots.length; i++) dots[i].render(context); 
   
 }
 
@@ -128,7 +128,7 @@ Dot.prototype.render = function(c) {
     y = this.pos.y;
 
 
-  for (var i = 0; i < dots.size; i++) {
+  for (var i = 0; i < dots.length; i++) {
     if (lines > 0 && this.ids.size > lines) break;
     if (i == this.id || dots[i].ids.has(this.id) || this.ids.has(i)) continue;
     var x2 = dots[i].pos.x,

@@ -7,9 +7,9 @@ dots = [],
 FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
 stars = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 25 : 50,
 //minDistance = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 75 : 100,
-minDiv=10,
+minDiv=11.5,
 minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv,
-speed = 2,
+speed = 0.1,
 thick = 3.5,
 //lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 3 : 5,
 lines = 10,
@@ -55,7 +55,21 @@ $(function(){
   });
   
   $('input[type="checkbox"]').change(function(e){
-    window[e.target.value] = e.target.checked;    
+    window[e.target.value] = e.target.checked;
+    if (tether) {
+      speed *=2;
+      for (let d of dots) {
+        d.vel.x*=2;
+        d.vel.y*=2;
+      }      
+    }
+    else {
+     speed /=2;
+      for (let d of dots) {
+        d.vel.x/=2
+        d.vel.y/=2;
+      }       
+    }  
   });
 })
 
@@ -139,8 +153,8 @@ Dot.prototype.render = function(c) {
     }
 
     var grd = c.createLinearGradient(x, y, x2, y2),
-    s1 = "rgba(" + this.r + "," + this.g + "," + this.b + "," + (1 - (distance / minDistance)) + ")",
-    s2 = 'rgba(' + dots[i].r + ',' + dots[i].g + ',' + dots[i].b + ',' + (1 - (distance / minDistance)) + ')';
+    s1 = "rgba(" + this.r + "," + this.g + "," + this.b + "," + 1.1*(1 - (distance / minDistance)) + ")",
+    s2 = 'rgba(' + dots[i].r + ',' + dots[i].g + ',' + dots[i].b + ',' + 1.1*(1 - (distance / minDistance)) + ')';
 
     grd.addColorStop(0, s1);
     grd.addColorStop(1, s2);

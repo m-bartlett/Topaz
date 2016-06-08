@@ -29,7 +29,7 @@ $(document).ready(function() {
   document.getElementById('canvas').appendChild(canvas);
   canvas.width = SCREEN_WIDTH;
   canvas.height = SCREEN_HEIGHT;
-  $('input[type="range"]').each(function(i) this.value = window[this.id]);
+  $('input[type="range"]').each(function(i) {this.value = window[this.id]);
   $('input[type="checkbox"]').each(function(i) this.checked = window[this.id] ? window[this.id].toString() : "");    
   for (var i = 0; i < stars; i++) dots.push(new Dot(i));  
   setInterval(loop, 1000 / FPS);

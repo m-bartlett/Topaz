@@ -28,6 +28,7 @@ input[type="range"] {
   /* Setting flex grow causes these to expand as big as they can get. */
   flex-grow: 3;
   min-width: 30px;
+  background: transparent;
 }
 
 input[type="checkbox"] {

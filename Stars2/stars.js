@@ -41,8 +41,8 @@ $(function(){
     if (e.target.id == 'speed') {
       for (let d of dots) {
         d.vel.x*=e.target.value/speed;
-        d.vel.y*=e.target.value/speed;
-      }
+        d.vel.y*=e.target.value/speed;                      
+      }      
     }
     
     window[e.target.id] = e.target.value;
@@ -57,14 +57,14 @@ $(function(){
   $('input[type="checkbox"]').change(function(e){
     window[e.target.value] = e.target.checked;
     if (tether) {
-      speed *=2;
+      //speed *=2;
       for (let d of dots) {
         d.vel.x*=2;
         d.vel.y*=2;
       }      
     }
     else {
-     speed /=2;
+     //speed /=2;
       for (let d of dots) {
         d.vel.x/=2
         d.vel.y/=2;
@@ -173,6 +173,7 @@ Dot.prototype.render = function(c) {
     c.moveTo(x, y);
     c.lineTo(x2, y2);
     c.lineWidth = thick;
+    c.lineCap = "round";
     c.strokeStyle = grd;
     c.stroke();
 

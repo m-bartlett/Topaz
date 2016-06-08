@@ -1,8 +1,8 @@
 /* Body has a margin, it's annoying. Fuck it. */
 body {
   margin: 0;
-  background-image: url("2memes.jpg");
   background: black;
+  background-image: url("2memes.jpg");  
   background-size:100%;
 }
 

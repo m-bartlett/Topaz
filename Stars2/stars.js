@@ -15,12 +15,14 @@ var SCREEN_WIDTH = window.innerWidth,
   minDiv=10,
   minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv,
   speed = 5,
-  thick = 3.5,
+  thick = 2.5,
   lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 3 : 5,
   G = 100,
   gravity = false;
   showDots = true;
   tether = false;
+  
+  
 
 // init
 $(document).ready(function() {
@@ -95,8 +97,8 @@ Dot.prototype.update = function() {
 	}
 	X /= (this.ids.size+1);
 	Y /= (this.ids.size+1);
-	this.pos.x += (X+this.vel.x)/2;
-	this.pos.y += (Y+this.vel.y)/2;
+	this.pos.x += (2*X+this.vel.x)/3;
+	this.pos.y += (2*Y+this.vel.y)/3;
   }
   else {
 	  this.pos.x += this.vel.x;

@@ -20,7 +20,7 @@ var SCREEN_WIDTH = window.innerWidth,
   G = 200,
   gravity = false;
   showDots = true;
-  tether =false;
+  tether = false;
 
 // init
 $(document).ready(function() {

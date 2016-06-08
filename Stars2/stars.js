@@ -9,18 +9,18 @@ mousePos = {
   canvas = document.createElement('canvas'),
   context = canvas.getContext('2d'),
   dots = [],
-  FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 30,
+  FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
   stars = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 25 : 50,
   //minDistance = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 75 : 100,
-  minDiv=15,
+  minDiv=10,
   minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv,
-  speed = 2,
+  speed = 5,
   thick = 2.5,
   //lines = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 3 : 5,
   lines = 10,
   G = 100,
   gravity = false;
-  showDots = true;
+  showDots = false;
   tether = false;
   
   
@@ -34,7 +34,7 @@ $(document).ready(function() {
   $('input[type="checkbox"]').each(function(i) { this.checked = window[this.id] ? window[this.id].toString() : "" });    
   for (var i = 0; i < stars; i++) dots.push(new Dot(i));  
     setInterval(loop, 1000 / FPS);
-  console.log("DONE!");
+  console.log(new Date());
 });
 
 //update mouse position
@@ -47,13 +47,20 @@ $(document).mousemove(function(e) {
 });
 
 $(function(){
-  $('input[type="range"]').change(function(e){
-    // You can get the value of the input that changed here! I probably should have kept the ids on them so that you'd be able to get that to figure out which slider changed.
+  $('input[type="range"]').change(function(e){    
+    if (e.target.id == 'speed') {
+      for (let d of dots) {
+          d.vel.x*=e.target.value/speed;
+          d.vel.y*=e.target.value/speed;
+      }
+    }
     window[e.target.id] = e.target.value;
     console.log(e.target.id+" -> "+e.target.value);
+    if (e.target.id == 'minDiv') minDistance = Math.sqrt(Math.pow(SCREEN_WIDTH,2) + Math.pow(SCREEN_HEIGHT,2))/minDiv;
     if (stars < dots.length) { dots = dots.slice(0,stars); }
     else if (stars > dots.length) for (var i = dots.length; i<stars; i++) dots.push(new Dot(i));    
   });
+  
   $('input[type="checkbox"]').change(function(e){
     window[e.target.value] = e.target.checked;    
   });
@@ -81,7 +88,8 @@ function loop() {
       y: Math.random() * SCREEN_HEIGHT
     };
     this.vel = { x: Math.random() * speed * (Math.round(Math.random()) ? 1 : -1), y: 0 };
-    this.vel.y = Math.sqrt(Math.pow(speed, 2) - Math.pow(this.vel.x, 2)) * (Math.round(Math.random()) ? 1 : -1)
+    this.vel.y = Math.random() * speed * (Math.round(Math.random()) ? 1 : -1);
+    //this.vel.y = Math.sqrt(Math.pow(speed, 2) - Math.pow(this.vel.x, 2)) * (Math.round(Math.random()) ? 1 : -1)
     this.r = Math.round(Math.random() * 255);
     this.g = Math.round(Math.random() * 255);
     this.b = Math.round(Math.random() * 255);

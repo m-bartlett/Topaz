@@ -2,7 +2,7 @@
 body {
   margin: 0;
   background: black;
-  /*background-image: url("memes.jpg");  */
+  /*background-image: url("memes.jpg");*/
   /*background-size:100%;*/
 }
 
@@ -44,4 +44,8 @@ input[type="checkbox"] {
   height: 100%;
   /* This is to see the canvas for debugging. */
   background: 100%;
+}
+
+#minDiv{
+    transform: rotateY(180deg);
 }

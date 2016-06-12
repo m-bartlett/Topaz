@@ -147,10 +147,16 @@ Dot.prototype.friend = function() {
 //Creates list of lines from dots' neighbors
 Dot.prototype.lines = function() {
     if (this.ids.size > 0) {
+        /*
         var min = maxDist, index = 0;
         for (var i of this.ids.keys()) if (this.ids.get(i) < min) { min = this.ids.get(i); index = i; }        
         dots[index].ids.delete(this.id);
         Lines.add(new Line(this, dots[index]));
+        */
+        for (var i of this.ids.keys()) {
+          dots[i].ids.delete(this.id);
+          Lines.add(new Line(this, dots[i]));
+        }
     }
 };
 
@@ -197,13 +203,13 @@ function Render(c) {
                 //cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
                 //cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
 
-                cA = "rgba(" + A.r + "," + A.g + "," + A.b + ",1)",
-                cB = "rgba(" + B.r + "," + B.g + "," + B.b + ",1)",
-                cC = "rgba(" + C.r + "," + C.g + "," + C.b + ",1)",
+                //cA = "rgba(" + A.r + "," + A.g + "," + A.b + ",1)",
+                //cB = "rgba(" + B.r + "," + B.g + "," + B.b + ",1)",
+                //cC = "rgba(" + C.r + "," + C.g + "," + C.b + ",1)",
 
-                //cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + ((1 - (dA / maxPtoC))) + ")",
-                //cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + ((1 - (dB / maxPtoC))) + ")",
-                //cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + ((1 - (dC / maxPtoC))) + ")",
+                cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + ((1 - (dA / maxDist))) + ")",
+                cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + ((1 - (dB / maxDist))) + ")",
+                cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + ((1 - (dC / maxDist))) + ")",
 
                 c0 = "rgba(0,0,0,0)";
 
@@ -226,12 +232,12 @@ function Render(c) {
             c.beginPath();
             c.moveTo(A.pos.x, A.pos.y);
 
-            c.lineTo(B.pos.x, B.pos.y);
-            c.lineTo(C.pos.x, C.pos.y);
+            //c.lineTo(B.pos.x, B.pos.y);
+            //c.lineTo(C.pos.x, C.pos.y);
 
-            //c.quadraticCurveTo(center.x, center.y, B.pos.x, B.pos.y);
-            //c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
-            //c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
+            c.quadraticCurveTo(center.x, center.y, B.pos.x, B.pos.y);
+            c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
+            c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
 
             c.fillStyle = gA;
             c.fill();

@@ -65,8 +65,8 @@ $(function() {
   $('input[type="checkbox"]').change(function(e) {
     window[e.target.value] = e.target.checked;
     if (e.target.id == 'tether') {
-    if (tether) for (let d of dots) { d.vel.x *= 2; d.vel.y *= 2; } 
-    else for (let d of dots) { d.vel.x /= 2; d.vel.y /= 2; }        
+      if (tether) for (let d of dots) { d.vel.x *= 2; d.vel.y *= 2; } 
+      else for (let d of dots) { d.vel.x /= 2; d.vel.y /= 2; }        
   }
   });
 })
@@ -145,7 +145,7 @@ Dot.prototype.render = function(c) {
 
     for (var i = 0; i < dots.length; i++) {
       if (lines > 0 && this.ids.size >= lines) break;
-      if (this.id==i || this.ids.has(i) || dots[i].ids.has(i)) continue;
+      if (this.id==i || dots[i].ids.has(this.id)) continue;
       var distance = Math.sqrt(Math.pow(this.pos.x - dots[i].pos.x, 2) + Math.pow(this.pos.y - dots[i].pos.y, 2));
       if (distance > minDistance) continue;
 

@@ -64,8 +64,10 @@ $(function() {
 
   $('input[type="checkbox"]').change(function(e) {
     window[e.target.value] = e.target.checked;
+    if (e.target.id == 'tether') {
     if (tether) for (let d of dots) { d.vel.x *= 2; d.vel.y *= 2; } 
     else for (let d of dots) { d.vel.x /= 2; d.vel.y /= 2; }        
+  }
   });
 })
 

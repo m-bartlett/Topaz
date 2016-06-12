@@ -2,8 +2,11 @@
 ####Fireworks:
 http://rawgit.com/bartlettmic/GiTest/master/memes/index.html
 
-####Pretty:
+####Stars:
 http://rawgit.com/bartlettmic/GiTest/master/Stars2/index.html
+
+####Arrowheads:
+http://rawgit.com/bartlettmic/GiTest/master/Triangles/index.html
 
 ####Gravity:
 http://rawgit.com/bartlettmic/GiTest/master/Stars2/index2.html

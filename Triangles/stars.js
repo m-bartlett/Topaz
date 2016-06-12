@@ -168,10 +168,19 @@ function Render(c) {
           var area = (A.pos.x*(B.pos.y-C.pos.y)+B.pos.x*(C.pos.y-A.pos.y)+C.pos.x*(A.pos.y-B.pos.y))/2;
               distanceA = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2)),
               distanceB = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)),
-              distanceC = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
+              distanceC = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2)),
+
+              dA = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(A.pos.x - C.pos.x, 2) + Math.pow(A.pos.y - C.pos.y, 2)))/2,
+              dB = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(B.pos.x - C.pos.x, 2) + Math.pow(B.pos.y - C.pos.y, 2)))/2,
+              dC = (Math.sqrt(Math.pow(C.pos.x - B.pos.x, 2) + Math.pow(C.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(A.pos.x - C.pos.x, 2) + Math.pow(A.pos.y - C.pos.y, 2)))/2;
+
+
+
+
               //if (distanceA > maxPtoC || distanceB > maxPtoC || distanceC > maxPtoC) continue;
-              if (area < 0.1) continue;       
-              if (area > maxArea) continue;
+              //if (area < 0.1) continue;       
+              //if (area > maxArea) continue;
+              //if ((distanceA / maxPtoC)+(distanceB / maxPtoC)+(distanceC / maxPtoC) < .1) continue;
 
            var AB = { x: (A.pos.x+B.pos.x)/2, y: (A.pos.y+B.pos.y)/2 },
 
@@ -191,9 +200,9 @@ function Render(c) {
               //cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
               //cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
 
-              cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + ((1 - (distanceA / maxPtoC))) + ")",
-              cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + ((1 - (distanceA / maxPtoC))) + ")",
-              cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + ((1 - (distanceA / maxPtoC))) + ")",              
+              cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + ((1 - (dA / maxPtoC))) + ")",
+              cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + ((1 - (dB / maxPtoC))) + ")",
+              cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + ((1 - (dC / maxPtoC))) + ")",              
 
        
 
@@ -204,8 +213,13 @@ function Render(c) {
 
           c.beginPath();
           c.moveTo(A.pos.x, A.pos.y);
+          
           c.lineTo(B.pos.x, B.pos.y);
           c.lineTo(C.pos.x, C.pos.y);
+          
+          //c.quadraticCurveTo(center.x, center.y, B.pos.x, B.pos.y);
+          //c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
+          //c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
           
           c.fillStyle = gA;
           c.fill();

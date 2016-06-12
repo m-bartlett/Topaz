@@ -1,6 +1,10 @@
   /*
   • Gravity
   • Dropdown for different rendering
+    ► round or square ends
+    ► circles
+    ► triangles
+    ► ????
   • Text feedback for sliders – hovering JS text?
   • Click to add dot (increase max value)
   • Fade triangles better

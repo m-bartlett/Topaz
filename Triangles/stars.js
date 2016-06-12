@@ -1,3 +1,12 @@
+  /*
+  • Gravity
+  • Dropdown for different rendering
+  • Text feedback for sliders – hovering JS text?
+  • Click to add dot (increase max value)
+  • Fade triangles better
+  */
+
+
   mousePos = {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2
@@ -8,8 +17,6 @@
   Lines = new Set(),
   FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
   stars = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 25 : 50,
-  //stars = 5;
-  //maxDist = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 75 : 100,
   maxDiv = 11.5,
   maxDist = Math.sqrt(Math.pow(window.innerWidth, 2) + Math.pow(window.innerHeight, 2)) / maxDiv,
   speed = 0.25,

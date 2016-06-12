@@ -84,10 +84,7 @@ function loop() {
     for (var i = 0; i < dots.length; i++) dots[i].update();
     for (var i = 0; i < dots.length; i++) dots[i].friend();
     Lines.clear();
-    for (var i = 0; i < dots.length; i++) {
-      dots[i].lines();
-      //dots[i].render(context);
-    }
+    for (var i = 0; i < dots.length; i++) dots[i].lines();   
     Render(context);
 }
 
@@ -143,7 +140,6 @@ Dot.prototype.friend = function() {
     var distance = Math.sqrt(Math.pow(this.pos.x - dots[i].pos.x, 2) + Math.pow(this.pos.y - dots[i].pos.y, 2));
     if (distance > maxDist) continue;
 
-
     this.ids.set(i, distance);
     dots[i].ids.set(this.id, distance);
   }
@@ -151,7 +147,7 @@ Dot.prototype.friend = function() {
 
 //Creates list of lines from dots' neighbors
 Dot.prototype.lines = function() {  
-  if (this.ids.size > 0) {
+  if (this.ids.size > 0) {   
     for (var i of this.ids.keys()) {
         dots[i].ids.delete(this.id);
         Lines.add(new Line(this, dots[i]));        
@@ -163,45 +159,63 @@ function Render(c) {
     for (let L of Lines) {
       var A = L.d1, B = L.d2,
           maxArea = Math.pow(maxDist,2)*Math.sqrt(3)/4
+          maxPtoC = maxDist*Math.sqrt(3)/3
      
         for (var i of L.d1.ids.keys()) {
-          var C = dots[i],
-              area = (A.pos.x*(B.pos.y-C.pos.y)+B.pos.x*(C.pos.y-A.pos.y)+C.pos.x*(A.pos.y-B.pos.y))/2;
+          var C = dots[i];
+          if (C.id == B.id || C.id == A.id) continue;
+          var center = { x: (A.pos.x + B.pos.x + C.pos.x)/3, y: (A.pos.y + B.pos.y + C.pos.y)/3 };
+          var area = (A.pos.x*(B.pos.y-C.pos.y)+B.pos.x*(C.pos.y-A.pos.y)+C.pos.x*(A.pos.y-B.pos.y))/2;
+              distanceA = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2)),
+              distanceB = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)),
+              distanceC = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
+              //if (distanceA > maxPtoC || distanceB > maxPtoC || distanceC > maxPtoC) continue;
+              if (area < 0.1) continue;       
               if (area > maxArea) continue;
 
-              /*var center = {
-                x: (A.pos.x+B.pos.x+C.pos.x)/3
-                y: (A.pos.y+B.pos.y+C.pos.y)/3
-              },*/
-              
-              var AB = { x: (A.pos.x+B.pos.x)/2, y: (A.pos.y+B.pos.y)/2 },
+           var AB = { x: (A.pos.x+B.pos.x)/2, y: (A.pos.y+B.pos.y)/2 },
 
               BC = { x: (B.pos.x+C.pos.x)/2, y: (B.pos.y+C.pos.y)/2 },
 
               CA = { x: (C.pos.x+A.pos.x)/2, y: (C.pos.y+A.pos.y)/2 },
 
-              gA = c.createRadialGradient(A.pos.x, A.pos.y, 1, BC.x, BC.y, 5),
-              gB = c.createRadialGradient(B.pos.x, B.pos.y, 1, CA.x, CA.y, 5),
-              gC = c.createRadialGradient(C.pos.x, C.pos.y, 1, AB.x, AB.y, 5),
-              cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + 1 * (1 - (area / maxArea)) + ")",
-              cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + 1 * (1 - (area / maxArea)) + ")",
-              cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + 1 * (1 - (area / maxArea)) + ")",
-              c0 = "rgba(0, 0, 0, 0)";
+              A2c = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2))*Math.sqrt(3)/3,
+              B2c = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2))*Math.sqrt(3)/3,
+              C2c = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2))*Math.sqrt(3)/3,
+
+              gA = c.createLinearGradient(A.pos.x, A.pos.y, BC.x, BC.y),
+              gB = c.createLinearGradient(B.pos.x, B.pos.y, CA.x, CA.y),
+              gC = c.createLinearGradient(C.pos.x, C.pos.y, AB.x, AB.y),
+              
+              //cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
+              //cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
+              //cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
+
+              cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + ((1 - (distanceA / maxPtoC))) + ")",
+              cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + ((1 - (distanceA / maxPtoC))) + ")",
+              cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + ((1 - (distanceA / maxPtoC))) + ")",              
+
+       
+
+              c0 = "rgba(0,0,0,0)";
               gA.addColorStop(0, cA); gA.addColorStop(1, c0);
-              gB.addColorStop(0, cB); gA.addColorStop(1, c0);
-              gC.addColorStop(0, cC); gA.addColorStop(1, c0);
+              gB.addColorStop(0, cB); gB.addColorStop(1, c0);
+              gC.addColorStop(0, cC); gC.addColorStop(1, c0);
 
           c.beginPath();
           c.moveTo(A.pos.x, A.pos.y);
           c.lineTo(B.pos.x, B.pos.y);
           c.lineTo(C.pos.x, C.pos.y);
+          
           c.fillStyle = gA;
           c.fill();
+          
           c.fillStyle = gB;
           c.fill();
+          
           c.fillStyle = gC;
-          c.fill();
-
+          c.fill();          
+          
         }
   }                
 };

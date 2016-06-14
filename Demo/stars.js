@@ -290,7 +290,7 @@ function Render(c) {
     H+=20;
     c.fillText("Ideal A/P Ratio: "+0.14434,5,H);
     H+=20;
-    c.fillText("Deviation: "+Math.round(100*Math.abs(AP-0.14434)/0.14434)+"%",5,H);
+    c.fillText("Deviation: "+Math.round(1000*Math.abs(AP-0.14434)/0.14434)/10+"%",5,H);
     c.fillStyle="red";
     H+=30;
     c.fillText("A radius: "+Math.round(100*Ac2.dist)/100,5,H);
@@ -299,7 +299,7 @@ function Render(c) {
     c.fillText("B radius: "+Math.round(100*Bc2.dist)/100,5,H);
     c.fillStyle="blue";
     H+=20;
-    c.fillText("C radius: "+Math.round(100*Cc2.dist)/100,5,H);
+    c.fillText("C radius: "+Math.round(10*Cc2.dist)/100,5,H);
     c.fillStyle="red";
     H+=30;
     

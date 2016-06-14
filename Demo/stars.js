@@ -13,9 +13,7 @@ $(document).ready(function() {
     document.getElementById('canvas').appendChild(canvas);
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    A.r=255; A.g=0; A.b=0;
-    B.r=0; B.g=255; B.b=0;
-    C.r=0; C.g=0; C.b=255;  
+    //A.r=255; A.g=0; A.b=0;    B.r=0; B.g=255; B.b=0;    C.r=0; C.g=0; C.b=255;  
     A.pos.x=721; A.pos.y=57;
     B.pos.x=1290; B.pos.y=688;
     C.pos.x=254; C.pos.y=699;
@@ -50,6 +48,10 @@ $(document).click(function(e) {
     Render(context);
 });
 
+$(document).contextmenu(function(e) {
+    console.log("derp");
+});    
+
 
 //Dot class constructor
 function Dot(ID) {
@@ -62,38 +64,6 @@ function Dot(ID) {
     this.id = ID;
     this.ids = new Map();
 }
-
-Dot.prototype.friend = function() {
-    
-    for (var i = 0; i < dots.length; i++) {
-        if (lines > 0 && this.ids.size >= lines) break;
-        if (this.id == i || dots[i].ids.has(this.id)) continue;
-        var distance = Math.sqrt(Math.pow(this.pos.x - dots[i].pos.x, 2) + Math.pow(this.pos.y - dots[i].pos.y, 2));
-        if (distance > maxDist) continue;
-
-        this.ids.set(i, distance);
-        dots[i].ids.set(this.id, distance);
-    }
-};
-
-function Line(dot1, dot2) { this.d1 = dot1; this.d2 = dot2; }
-
-//Creates list of lines from dots' neighbors
-Dot.prototype.lines = function() {
-    if (this.ids.size > 0) {
-        /*
-        var min = maxDist, index = 0;
-        for (var i of this.ids.keys()) if (this.ids.get(i) < min) { min = this.ids.get(i); index = i; }        
-        dots[index].ids.delete(this.id);
-        Lines.add(new Line(this, dots[index]));
-        */
-        for (var i of this.ids.keys()) {
-          dots[i].ids.delete(this.id);
-          Lines.add(new Line(this, dots[i]));
-        }
-    }
-};
-
 
 function Render(c) {
 
@@ -198,18 +168,17 @@ function Render(c) {
     c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
     c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
 
-    cA = "rgba(0,255,255," + alphaA + ")",
-    cB = "rgba(255,0,255," + alphaB + ")",
-    cC = "rgba(255,255,0," + alphaC + ")",
+    cA = "rgba(" + (255-A.r) + "," + (255-A.g) + "," + (255-A.b) + "," + alphaA + ")",
+    cB = "rgba(" + (255-B.r) + "," + (255-B.g) + "," + (255-B.b) + "," + alphaB + ")",
+    cC = "rgba(" + (255-C.r) + "," + (255-C.g) + "," + (255-C.b) + "," + alphaC + ")",
 
     gA.addColorStop(0, cA); gA.addColorStop(1, c0);
     gB.addColorStop(0, cB); gB.addColorStop(1, c0);
     gC.addColorStop(0, cC); gC.addColorStop(1, c0);
 
-    //c.globalCompositeOperation = 'destination-over';
+    //c.globalCompositeOperation = 'screen';
     c.fillStyle = gA; c.fill(); c.fillStyle = gB; c.fill(); c.fillStyle = gC; c.fill();
-    //c.globalCompositeOperation = 'source-over';
-    
+    //c.globalCompositeOperation = 'source-over';   
 
     //c.strokeStyle = gA; c.stroke(); c.strokeStyle = gB; c.stroke(); c.strokeStyle = gC; c.stroke(); 
 
@@ -260,15 +229,6 @@ function Render(c) {
 
     //CA → AB. A
     c.beginPath(); c.moveTo(CA.x, CA.y); c.quadraticCurveTo(A.pos.x, A.pos.y, AB.x, AB.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
-
-    //A → B, center
-    //c.beginPath(); c.moveTo(A.pos.x, A.pos.y); c.quadraticCurveTo(center.x, center.y, B.pos.x, B.pos.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,255,0,1)"; c.stroke();
-
-    //B → C, center
-    //c.beginPath(); c.moveTo(B.pos.x, B.pos.y); c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
-
-    //C → A, center
-    //c.beginPath(); c.moveTo(C.pos.x, C.pos.y); c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,0,255,1)"; c.stroke();    
 
     //Text informatics
     c.font = '20px sans-serif';

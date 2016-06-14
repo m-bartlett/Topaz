@@ -15,8 +15,10 @@ $(document).ready(function() {
     canvas.height = window.innerHeight;
     A.r=255; A.g=0; A.b=0;
     B.r=0; B.g=255; B.b=0;
-    C.r=0; C.g=0; C.b=255;
-    //context.globalCompositeOperation = 'screen';
+    C.r=0; C.g=0; C.b=255;  
+    A.pos.x=721; A.pos.y=57;
+    B.pos.x=1290; B.pos.y=688;
+    C.pos.x=254; C.pos.y=699;
     Render(context);
 });
 
@@ -131,9 +133,10 @@ function Render(c) {
         gB = c.createLinearGradient(B.pos.x, B.pos.y, CA.x, CA.y),
         gC = c.createLinearGradient(C.pos.x, C.pos.y, AB.x, AB.y),
 
-        alphaA = (0.5 + 0.5*((AB.dist < CA.dist ? AB.dist : CA.dist)/maxDist)),        
-        alphaB = (0.5 + 0.5*((AB.dist < BC.dist ? AB.dist : BC.dist)/maxDist)),        
-        alphaC = (0.5 + 0.5*((BC.dist < CA.dist ? BC.dist : CA.dist)/maxDist)),
+        //alphaA = (0.5 + 0.5*((AB.dist < CA.dist ? AB.dist : CA.dist)/maxDist)),        
+        //alphaB = (0.5 + 0.5*((AB.dist < BC.dist ? AB.dist : BC.dist)/maxDist)),        
+        //alphaC = (0.5 + 0.5*((BC.dist < CA.dist ? BC.dist : CA.dist)/maxDist)),
+        alphaA=1, alphaB=1, alphaC=1,
         
         
         cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alphaA + ")",
@@ -185,7 +188,9 @@ function Render(c) {
     c.lineTo(C.pos.x, C.pos.y);
     c.lineTo(A.pos.x, A.pos.y);
 
+    c.globalCompositeOperation = 'screen';
     c.fillStyle = gA; c.fill(); c.fillStyle = gB; c.fill(); c.fillStyle = gC; c.fill();
+    c.globalCompositeOperation = 'source-over';
 
     c.beginPath();
     c.moveTo(A.pos.x, A.pos.y);
@@ -201,7 +206,9 @@ function Render(c) {
     gB.addColorStop(0, cB); gB.addColorStop(1, c0);
     gC.addColorStop(0, cC); gC.addColorStop(1, c0);
 
+    //c.globalCompositeOperation = 'destination-over';
     c.fillStyle = gA; c.fill(); c.fillStyle = gB; c.fill(); c.fillStyle = gC; c.fill();
+    //c.globalCompositeOperation = 'source-over';
     
 
     //c.strokeStyle = gA; c.stroke(); c.strokeStyle = gB; c.stroke(); c.strokeStyle = gC; c.stroke(); 
@@ -280,15 +287,18 @@ function Render(c) {
     
     c.fillText("Area: "+area+"    Perimeter: "+Math.round(perimeter*100)/100,5,50); 
 
+    c.fillStyle="yellow";
     c.fillText("•AB: ("+Math.round(AB.x)+", "+Math.round(AB.y)+")    Length: "+Math.round(AB.dist*100)/100,5,80);
+    c.fillStyle="cyan";
     c.fillText("•BC: ("+Math.round(BC.x)+", "+Math.round(BC.y)+")    Length: "+Math.round(BC.dist*100)/100,5,100);
+    c.fillStyle="magenta";
     c.fillText("•CA: ("+Math.round(CA.x)+", "+Math.round(CA.y)+")    Length: "+Math.round(CA.dist*100)/100,5,120);
     c.fillStyle="orange";
     c.fillText("Center: ("+Math.round(center.x)+", "+Math.round(center.y)+")",5,150);
     c.fillText("A → Center: "+Math.round(center.A*100)/100,5,170);
     c.fillText("B → Center: "+Math.round(center.B*100)/100,5,190);
     c.fillText("C → Center: "+Math.round(center.C*100)/100,5,210);
-    c.fillStyle="cyan";
+    c.fillStyle="white";
     c.fillText("Area/Perimeter: "+(Math.round((area/perimeter)/((AB.dist+BC.dist+CA.dist)/3)*100000)/100000),5,240);
     c.fillText("Ideal A/P Ratio: "+0.14434,5,260);
     c.fillStyle="red";

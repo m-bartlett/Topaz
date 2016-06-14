@@ -252,7 +252,7 @@ function Render(c) {
 
     var stringB = "B: ("+B.pos.x+", "+B.pos.y+")   ";
     c.fillStyle="green";
-    c.fillText(stringB,135,H);
+    c.fillText(stringB,140,H);
 
     var stringC = "C: ("+C.pos.x+", "+C.pos.y+")   ";
     c.fillStyle="blue";

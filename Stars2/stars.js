@@ -5,7 +5,7 @@
   canvas = document.createElement('canvas'),
   context = canvas.getContext('2d'),
   dots = [],
-  FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
+  //FPS = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 30 : 60,
   stars = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 25 : 50,
   //minDistance = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 75 : 100,
   minDiv = 11.5,
@@ -17,7 +17,12 @@
   G = 200,
   gravity = false,
   showDots = false,
-  tether = false;
+  tether = false,
+  
+  frames = 0,
+  fps = 0,
+  date = new Date();  
+  
 
 //Initialize
 $(document).ready(function() {
@@ -31,8 +36,7 @@ $(document).ready(function() {
     this.checked = window[this.id] ? window[this.id].toString() : "";
   });
   for (var i = 0; i < stars; i++) dots.push(new Dot(i));
-    setInterval(loop, 1000 / FPS);
-  console.log(new Date().getTime());
+    //setInterval(loop, 1000 / FPS);  
 });
 
 //update mouse position
@@ -73,22 +77,32 @@ $(function() {
 
 
 //Loop function
-function loop() {
+! function loop() {
     // update screen size
+	frames++;
+	if (new Date()-date >= 1000) {
+		date = new Date();
+		fps = frames;
+		frames = 0;
+	}	
+	
+    if (window.innerWidth != canvas.width || window.innerHeight != canvas.height) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      minDistance = Math.sqrt(Math.pow(window.innerWidth, 2) + Math.pow(window.innerHeight, 2)) / minDiv;
+    }
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
     
+    context.font = '10px sans-serif';
+	context.fillStyle="white";
+	context.fillText(fps+" FPS",5,window.innerHeight-5);
 
-      if (window.innerWidth != canvas.width || window.innerHeight != canvas.height) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        minDistance = Math.sqrt(Math.pow(window.innerWidth, 2) + Math.pow(window.innerHeight, 2)) / minDiv;
-      }
-
-      context.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (var i = 0; i < dots.length; i++) dots[i].update();
-      for (var i = 0; i < dots.length; i++) dots[i].ids.clear();
-      for (var i = 0; i < dots.length; i++) dots[i].render(context);
-   }
+    for (var i = 0; i < dots.length; i++) dots[i].update();
+	for (var i = 0; i < dots.length; i++) dots[i].ids.clear();
+    for (var i = 0; i < dots.length; i++) dots[i].render(context);
+    setTimeout(loop, 0);     
+}();
 
 
 //Dot class constructor

@@ -51,7 +51,7 @@ $(document).click(function(e) {
 
 //Dot class constructor
 function Dot(ID) {
-    this.pos = { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight };
+    this.pos = { x: Math.round(Math.random() * window.innerWidth), y: Math.round(Math.random() * window.innerHeight) };
     //this.vel = { x: Math.random() * speed * (Math.round(Math.random()) ? 1 : -1), y: 0 };
     //this.vel.y = Math.sqrt(Math.pow(speed, 2) - Math.pow(this.vel.x, 2)) * (Math.round(Math.random()) ? 1 : -1)
     this.r = Math.round(Math.random() * 255);
@@ -100,7 +100,7 @@ function Render(c) {
         center.B = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2));
         center.C = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
 
-    var area = (A.pos.x * (B.pos.y - C.pos.y) + B.pos.x * (C.pos.y - A.pos.y) + C.pos.x * (A.pos.y - B.pos.y)) / 2,
+    var area = Math.abs((A.pos.x * (B.pos.y - C.pos.y) + B.pos.x * (C.pos.y - A.pos.y) + C.pos.x * (A.pos.y - B.pos.y)) / 2),
         
         //dA = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(A.pos.x - C.pos.x, 2) + Math.pow(A.pos.y - C.pos.y, 2))) / 2,
         //dB = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(B.pos.x - C.pos.x, 2) + Math.pow(B.pos.y - C.pos.y, 2))) / 2,
@@ -116,6 +116,12 @@ function Render(c) {
         BC = { x: (B.pos.x + C.pos.x) / 2, y: (B.pos.y + C.pos.y) / 2, dist: Math.sqrt(Math.pow(C.pos.x-B.pos.x, 2) + Math.pow(C.pos.y-B.pos.y, 2)) },
 
         CA = { x: (C.pos.x + A.pos.x) / 2, y: (C.pos.y + A.pos.y) / 2, dist: Math.sqrt(Math.pow(A.pos.x-C.pos.x, 2) + Math.pow(A.pos.y-C.pos.y, 2)) },
+
+        perimeter = AB.dist+BC.dist+CA.dist,
+
+        Ac2 = { x: (A.pos.x + center.x) / 2, y: (A.pos.y + center.y) / 2, dist: center.A / 2 },
+        Bc2 = { x: (B.pos.x + center.x) / 2, y: (B.pos.y + center.y) / 2, dist: center.B / 2 },
+        Cc2 = { x: (C.pos.x + center.x) / 2, y: (C.pos.y + center.y) / 2, dist: center.C / 2 },
 
         //A2c = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2)) * Math.sqrt(3) / 3,
         //B2c = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)) * Math.sqrt(3) / 3,
@@ -179,23 +185,9 @@ function Render(c) {
     //c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
     //c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
 
-    //c.fillStyle = gA;
-    //c.fill();
+    c.fillStyle = gA; c.fill(); c.fillStyle = gB; c.fill(); c.fillStyle = gC; c.fill();
 
-    //c.fillStyle = gB;
-    //c.fill();
-
-    //c.fillStyle = gC;
-    //c.fill();
-
-   c.strokeStyle = gA;
-   c.stroke(); 
-
-   c.strokeStyle = gB;
-   c.stroke(); 
-
-   c.strokeStyle = gC;
-   c.stroke(); 
+    //c.strokeStyle = gA; c.stroke(); c.strokeStyle = gB; c.stroke(); c.strokeStyle = gC; c.stroke(); 
 
     //AB → C
     c.beginPath(); c.moveTo(AB.x, AB.y); c.lineTo(C.pos.x, C.pos.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,0,255,1)"; c.stroke();
@@ -217,6 +209,15 @@ function Render(c) {
 
     //Center
     c.beginPath(); c.arc(center.x, center.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+
+    //Ac2
+    c.beginPath(); c.arc(Ac2.x, Ac2.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+
+    //Bc2
+    c.beginPath(); c.arc(Bc2.x, Bc2.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+
+    //Cc2
+    c.beginPath(); c.arc(Cc2.x, Cc2.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //AB → BC, center
     c.beginPath(); c.moveTo(AB.x, AB.y); c.quadraticCurveTo(center.x, center.y, BC.x, BC.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,0,255,1)"; c.stroke();
@@ -244,4 +245,29 @@ function Render(c) {
 
     //C → A, center
     c.beginPath(); c.moveTo(C.pos.x, C.pos.y); c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,0,255,1)"; c.stroke();    
+
+    //Text informatics
+    c.font = '20px sans-serif';
+    var stringA = "A: ("+A.pos.x+", "+A.pos.y+")   ";
+    c.fillStyle="red";
+    c.fillText(stringA,5,25);
+
+    var stringB = "B: ("+B.pos.x+", "+B.pos.y+")   ";
+    c.fillStyle="green";
+    c.fillText(stringB,5+stringA.length*8,25);
+
+    var stringC = "C: ("+C.pos.x+", "+C.pos.y+")   ";
+    c.fillStyle="blue";
+    c.fillText(stringC,5+stringA.length*8+stringB.length*8,25);
+    c.fillStyle="orange";
+    
+    c.fillText("Area: "+area+"    Perimeter: "+Math.round(perimeter*100)/100,5,50); 
+
+    c.fillText("•AB: ("+Math.round(AB.x)+", "+Math.round(AB.y)+")    Length: "+Math.round(AB.dist*100)/100,5,80);
+    c.fillText("•BC: ("+Math.round(BC.x)+", "+Math.round(BC.y)+")    Length: "+Math.round(BC.dist*100)/100,5,100);
+    c.fillText("•CA: ("+Math.round(CA.x)+", "+Math.round(CA.y)+")    Length: "+Math.round(CA.dist*100)/100,5,120);
+    c.fillText("Center: ("+Math.round(center.x)+", "+Math.round(center.y)+")",5,150);
+    c.fillText("A → Center: "+Math.round(center.A*100)/100,5,170);
+    c.fillText("B → Center: "+Math.round(center.B*100)/100,5,190);
+    c.fillText("C → Center: "+Math.round(center.C*100)/100,5,210);
 }

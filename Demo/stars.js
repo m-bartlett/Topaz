@@ -14,7 +14,7 @@ $(document).ready(function() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     A.r=255; A.g=0; A.b=0;    B.r=0; B.g=255; B.b=0;    C.r=0; C.g=0; C.b=255;  
-    A.pos.x=721; A.pos.y=57;    B.pos.x=1290; B.pos.y=500;    C.pos.x=254; C.pos.y=500;
+    //A.pos.x=721; A.pos.y=57;    B.pos.x=1290; B.pos.y=500;    C.pos.x=254; C.pos.y=500;
     Render(context);
 });
 
@@ -55,9 +55,10 @@ $(document).click(function(e) {
 
 //Equilateralize
 $(document).dblclick(function(e) {
-    var dist1 = Math.sqrt(Math.pow(B.pos.x-C.pos.x, 2)+Math.pow(B.pos.y-C.pos.y, 2));
-    dist1 /= 2;
-    B.pos.x = Math.round( C.pos.x + (C.pos.x > window.innerWidth ? -dist1 : dist1));
+    C.pos.x = mousePos.x;
+    C.pos.y = mousePos.y;
+    var dist1 = Math.sqrt(Math.pow(B.pos.x-C.pos.x, 2)+Math.pow(B.pos.y-C.pos.y, 2));    
+    B.pos.x = Math.round( C.pos.x + (C.pos.x >= window.innerWidth ? -dist1 : dist1));
     B.pos.y = C.pos.y;
     A.pos.x = Math.round((B.pos.x+C.pos.x)/2);
     A.pos.y = Math.round(B.pos.y-(dist1*Math.sqrt(3)/2));

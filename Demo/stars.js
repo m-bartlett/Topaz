@@ -4,8 +4,9 @@
     A = new Dot(0),
     B = new Dot(0),
     C = new Dot(0);
-    maxDist=600;
+    maxDist=800;
     dots = [A, B, C];
+    center = { x: 0, y: 0, A: 0, B: 0, C: 0, AB: 0, BC: 0, CA:0 };
     
 
 //Initialize
@@ -31,11 +32,11 @@ $(document).click(function(e) {
 		var distance = Math.sqrt(Math.pow(dots[i].pos.x - mousePos.x, 2) + Math.pow(dots[i].pos.y - mousePos.y, 2));
 		if (distance < closest) {
 			closest = distance; index = i;
+        }
     }
-  }
-  dots[index].pos.x = mousePos.x;
-  dots[index].pos.y = mousePos.y;
-  if (window.innerWidth != canvas.width || window.innerHeight != canvas.height) {
+    dots[index].pos.x = mousePos.x;
+    dots[index].pos.y = mousePos.y;
+    if (window.innerWidth != canvas.width || window.innerHeight != canvas.height) {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         //maxDist = Math.sqrt(Math.pow(window.innerWidth, 2) + Math.pow(window.innerHeight, 2)) / maxDiv;
@@ -55,14 +56,28 @@ $(document).click(function(e) {
 
 //Equilateralize
 $(document).dblclick(function(e) {
-    C.pos.x = mousePos.x;
-    C.pos.y = mousePos.y;
-    var dist1 = Math.sqrt(Math.pow(B.pos.x-C.pos.x, 2)+Math.pow(B.pos.y-C.pos.y, 2));    
-    B.pos.x = Math.round( C.pos.x + (C.pos.x >= window.innerWidth ? -dist1 : dist1));
-    B.pos.y = C.pos.y;
-    A.pos.x = Math.round((B.pos.x+C.pos.x)/2);
-    A.pos.y = Math.round(B.pos.y-(dist1*Math.sqrt(3)/2));
-    console.log(A.pos.y);
+    var closest = window.innerWidth + window.innerHeight, index = 0;
+    for (var i = 0; i < dots.length; i++) {     
+        var distance = Math.sqrt(Math.pow(dots[i].pos.x - mousePos.x, 2) + Math.pow(dots[i].pos.y - mousePos.y, 2));
+        if (distance < closest) {
+            closest = distance; index = i;
+        }
+    }
+    dots[index].pos.x = mousePos.x;
+    dots[index].pos.y = mousePos.y;
+    //C.pos.x = mousePos.x;
+    //C.pos.y = mousePos.y;
+    var index2 = 0; while(index2 == index) index2++;
+
+    var dist1 = Math.sqrt(Math.pow(dots[index2].pos.x-dots[index].pos.x, 2)+Math.pow(dots[index2].pos.y-dots[index].pos.y, 2));    
+    if (dist1 > maxDist) dist1 = maxDist-1;
+    dots[index2].pos.x = Math.round( dots[index].pos.x + (dots[index].pos.x >= dots[index2].pos.x ? -dist1 : dist1));
+    dots[index2].pos.y = dots[index].pos.y;
+    
+    var index3 = 0; while(index3 == index || index3 == index2) index3++;    
+
+    dots[index3].pos.x = Math.round((dots[index2].pos.x+dots[index].pos.x)/2);
+    dots[index3].pos.y = Math.round(dots[index2].pos.y-(dist1*Math.sqrt(3)/2));    
     context.clearRect(0, 0, canvas.width, canvas.height);    
     Render(context);
 });    
@@ -82,93 +97,143 @@ function Dot(ID) {
 
 function Render(c) {
 
-    var center = { x: (A.pos.x + B.pos.x + C.pos.x) / 3, y: (A.pos.y + B.pos.y + C.pos.y) / 3, A: 0, B: 0, C: 0, AB: 0, BC: 0, CA:0 };
-        center.A = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2));
-        center.B = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2));
-        center.C = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
-
+      
+    center.x = (A.pos.x + B.pos.x + C.pos.x) / 3;
+    center.y = (A.pos.y + B.pos.y + C.pos.y) / 3;
+    center.A = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2));
+    center.B = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2));
+    center.C = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
+    var maxRadius = (Math.sqrt(3)/3)*(maxDist);  
     var area = Math.abs((A.pos.x * (B.pos.y - C.pos.y) + B.pos.x * (C.pos.y - A.pos.y) + C.pos.x * (A.pos.y - B.pos.y)) / 2),
-        max
+
+    AB = { x: (A.pos.x + B.pos.x) / 2, y: (A.pos.y + B.pos.y) / 2, dist: Math.sqrt(Math.pow(A.pos.x-B.pos.x, 2) + Math.pow(A.pos.y-B.pos.y, 2)) },
+
+    BC = { x: (B.pos.x + C.pos.x) / 2, y: (B.pos.y + C.pos.y) / 2, dist: Math.sqrt(Math.pow(C.pos.x-B.pos.x, 2) + Math.pow(C.pos.y-B.pos.y, 2)) },
+
+    CA = { x: (C.pos.x + A.pos.x) / 2, y: (C.pos.y + A.pos.y) / 2, dist: Math.sqrt(Math.pow(A.pos.x-C.pos.x, 2) + Math.pow(A.pos.y-C.pos.y, 2)) },
+
+    perimeter = AB.dist+BC.dist+CA.dist,
+
+    Ac2 = { x: (A.pos.x + center.x) / 2, y: (A.pos.y + center.y) / 2, dist: center.A / 2 },
+    Bc2 = { x: (B.pos.x + center.x) / 2, y: (B.pos.y + center.y) / 2, dist: center.B / 2 },
+    Cc2 = { x: (C.pos.x + center.x) / 2, y: (C.pos.y + center.y) / 2, dist: center.C / 2 };
+
+
+    if (center.A > maxRadius) {
+        var grd = c.createLinearGradient(C.pos.x, C.pos.y, B.pos.x, B.pos.y),        
+        //var grd = c.createRadialGradient(C.pos.x,C.pos.y,BC.dist/2,B.pos.x,B.pos.y,BC.dist/2);
         
-        //dA = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(A.pos.x - C.pos.x, 2) + Math.pow(A.pos.y - C.pos.y, 2))) / 2,
-        //dB = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(B.pos.x - C.pos.x, 2) + Math.pow(B.pos.y - C.pos.y, 2))) / 2,
-        //dC = (Math.sqrt(Math.pow(C.pos.x - B.pos.x, 2) + Math.pow(C.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(A.pos.x - C.pos.x, 2) + Math.pow(A.pos.y - C.pos.y, 2))) / 2;
-
-    //if (distanceA > maxPtoC || distanceB > maxPtoC || distanceC > maxPtoC) continue;
-    //if (area < 0.1) continue;       
-    //if (area > maxArea) continue;
-    //if ((distanceA / maxPtoC)+(distanceB / maxPtoC)+(distanceC / maxPtoC) < .1) continue;
-
-        AB = { x: (A.pos.x + B.pos.x) / 2, y: (A.pos.y + B.pos.y) / 2, dist: Math.sqrt(Math.pow(A.pos.x-B.pos.x, 2) + Math.pow(A.pos.y-B.pos.y, 2)) },
-
-        BC = { x: (B.pos.x + C.pos.x) / 2, y: (B.pos.y + C.pos.y) / 2, dist: Math.sqrt(Math.pow(C.pos.x-B.pos.x, 2) + Math.pow(C.pos.y-B.pos.y, 2)) },
-
-        CA = { x: (C.pos.x + A.pos.x) / 2, y: (C.pos.y + A.pos.y) / 2, dist: Math.sqrt(Math.pow(A.pos.x-C.pos.x, 2) + Math.pow(A.pos.y-C.pos.y, 2)) },
+        alpha = 1-(BC.dist/maxDist),
         
-        perimeter = AB.dist+BC.dist+CA.dist,
+        cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + alpha + ")",
+        cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + alpha + ")";                
 
-        Ac2 = { x: (A.pos.x + center.x) / 2, y: (A.pos.y + center.y) / 2, dist: center.A / 2 },
-        Bc2 = { x: (B.pos.x + center.x) / 2, y: (B.pos.y + center.y) / 2, dist: center.B / 2 },
-        Cc2 = { x: (C.pos.x + center.x) / 2, y: (C.pos.y + center.y) / 2, dist: center.C / 2 },
+        grd.addColorStop(0, cC); grd.addColorStop(1, cB);        
 
-        //A2c = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2)) * Math.sqrt(3) / 3,
-        //B2c = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)) * Math.sqrt(3) / 3,
-        //C2c = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)) * Math.sqrt(3) / 3,
+    / //A
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
-        gA = c.createLinearGradient(A.pos.x, A.pos.y, BC.x, BC.y),
+    //B
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+
+    //C
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+
+    //Line
+    c.beginPath(); c.moveTo(C.pos.x, C.pos.y); 
+
+    c.quadraticCurveTo(BC.x, BC.y, center.x, center.y);
+    c.quadraticCurveTo(BC.x, BC.y, B.pos.x, B.pos.y);        
+    c.lineTo(C.pos.x, C.pos.y); 
+    c.fillStyle = grd; c.fill();   
+
+    } else if (center.B > maxRadius) {
+        var grd = c.createLinearGradient(C.pos.x, C.pos.y, A.pos.x, A.pos.y),        
+        //var grd = c.createRadialGradient(C.pos.x,C.pos.y,BC.dist/2,B.pos.x,B.pos.y,BC.dist/2);
+        
+        alpha = 1-(CA.dist/maxDist),
+        
+        cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + alpha + ")",
+        cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alpha + ")";                
+
+        grd.addColorStop(0, cC); grd.addColorStop(1, cA);        
+
+    / //A
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+
+    //B
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+
+    //C
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+
+    //Line
+    c.beginPath(); c.moveTo(C.pos.x, C.pos.y); 
+
+    c.quadraticCurveTo(CA.x, CA.y, center.x, center.y);
+    c.quadraticCurveTo(CA.x, CA.y, A.pos.x, A.pos.y);        
+    c.lineTo(C.pos.x, C.pos.y); 
+    c.fillStyle = grd; c.fill();    
+
+    } else if (center.C > maxRadius) {
+        var grd = c.createLinearGradient(A.pos.x, A.pos.y, B.pos.x, B.pos.y),        
+        //var grd = c.createRadialGradient(C.pos.x,C.pos.y,BC.dist/2,B.pos.x,B.pos.y,BC.dist/2);
+        
+        alpha = 1-(AB.dist/maxDist),
+        
+        cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alpha + ")",
+        cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + alpha + ")";                
+
+        grd.addColorStop(0, cA); grd.addColorStop(1, cB);        
+
+    / //A
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+
+    //B
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+
+    //C
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+
+    //Line
+    c.beginPath(); c.moveTo(A.pos.x, A.pos.y); 
+
+    c.quadraticCurveTo(AB.x, AB.y, center.x, center.y);
+    c.quadraticCurveTo(AB.x, AB.y, B.pos.x, B.pos.y);        
+    c.lineTo(A.pos.x, A.pos.y); 
+    c.fillStyle = grd; c.fill();
+} else {
+
+    var gA = c.createLinearGradient(A.pos.x, A.pos.y, BC.x, BC.y),
         gB = c.createLinearGradient(B.pos.x, B.pos.y, CA.x, CA.y),
         gC = c.createLinearGradient(C.pos.x, C.pos.y, AB.x, AB.y),
 
-        //alphaA = (0.5 + 0.5*((AB.dist < CA.dist ? AB.dist : CA.dist)/maxDist)),        
-        //alphaB = (0.5 + 0.5*((AB.dist < BC.dist ? AB.dist : BC.dist)/maxDist)),        
-        //alphaC = (0.5 + 0.5*((BC.dist < CA.dist ? BC.dist : CA.dist)/maxDist)),
-        alphaA=1, alphaB=1, alphaC=1,
-        
-        
+        alphaA = 1-((center.A/maxRadius)),        
+        alphaB = 1-((center.B/maxRadius)),        
+        alphaC = 1-((center.C/maxRadius)),
+                
         cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alphaA + ")",
         cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + alphaB + ")",
         cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + alphaC + ")",
-
-        //cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
-        //cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
-        //cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
-
-        //cA = "rgba(" + A.r + "," + A.g + "," + A.b + ",1)",
-        //cB = "rgba(" + B.r + "," + B.g + "," + B.b + ",1)",
-        //cC = "rgba(" + C.r + "," + C.g + "," + C.b + ",1)",
-
-        //cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + ((1 - (dA / maxDist))) + ")",
-        //cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + ((1 - (dB / maxDist))) + ")",
-        //cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + ((1 - (dC / maxDist))) + ")",
-
         c0 = "rgba(0,0,0,0)";
 
-    center.AB = Math.sqrt(Math.pow(center.x-AB.x, 2) + Math.pow(center.y-AB.y, 2));
-    center.BC = Math.sqrt(Math.pow(center.x-BC.x, 2) + Math.pow(center.y-BC.y, 2));
-    center.CA = Math.sqrt(Math.pow(center.x-CA.x, 2) + Math.pow(center.y-CA.y, 2));
-    
-    gA.addColorStop(0, cA); gA.addColorStop(1, c0);
-    gB.addColorStop(0, cB); gB.addColorStop(1, c0);
-    gC.addColorStop(0, cC); gC.addColorStop(1, c0);
+        center.AB = Math.sqrt(Math.pow(center.x-AB.x, 2) + Math.pow(center.y-AB.y, 2));
+        center.BC = Math.sqrt(Math.pow(center.x-BC.x, 2) + Math.pow(center.y-BC.y, 2));
+        center.CA = Math.sqrt(Math.pow(center.x-CA.x, 2) + Math.pow(center.y-CA.y, 2));
 
-    
+        gA.addColorStop(0, cA); gA.addColorStop(1, c0);
+        gB.addColorStop(0, cB); gB.addColorStop(1, c0);
+        gC.addColorStop(0, cC); gC.addColorStop(1, c0);
+
+
     //A
-    c.beginPath();
-    c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI);
-    c.fillStyle = "rgba(255,255,255,1)";
-    c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath();
-    c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI);
-    c.fillStyle = "rgba(255,255,255,1)";
-    c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath();
-    c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI);
-    c.fillStyle = "rgba(255,255,255,1)";
-    c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Solid Triangle
     c.beginPath();
@@ -249,18 +314,19 @@ function Render(c) {
 
     //CA → AB. A
     c.beginPath(); c.moveTo(CA.x, CA.y); c.quadraticCurveTo(A.pos.x, A.pos.y, AB.x, AB.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
+}
     
     //Circumcenter circle
     c.beginPath(); 
     var DD = 2*(A.pos.x*(B.pos.y-C.pos.y)+B.pos.x*(C.pos.y-A.pos.y)+C.pos.x*(A.pos.y-B.pos.y)),
-        circumcenter = { x: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(B.pos.y-C.pos.y) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(C.pos.y-A.pos.y) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(A.pos.y-B.pos.y))/DD,
-                         y: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(C.pos.x-B.pos.x) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(A.pos.x-C.pos.x) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(B.pos.x-A.pos.x))/DD,
-                         radius: 0 };
-        circumcenter.radius = Math.sqrt(Math.pow(circumcenter.x-A.pos.x, 2) + Math.pow(circumcenter.y-A.pos.y, 2));
-    
-    c.arc(circumcenter.x, circumcenter.y, circumcenter.radius, 0, 2 * Math.PI); 
-    c.strokeStyle = "white"; c.lineWidth = 1; c.stroke();
-    
+    circumcenter = { x: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(B.pos.y-C.pos.y) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(C.pos.y-A.pos.y) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(A.pos.y-B.pos.y))/DD,
+       y: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(C.pos.x-B.pos.x) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(A.pos.x-C.pos.x) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(B.pos.x-A.pos.x))/DD,
+       radius: 0 };
+       circumcenter.radius = Math.sqrt(Math.pow(circumcenter.x-A.pos.x, 2) + Math.pow(circumcenter.y-A.pos.y, 2));
+
+       c.arc(circumcenter.x, circumcenter.y, circumcenter.radius, 0, 2 * Math.PI); 
+       c.strokeStyle = "white"; c.lineWidth = 1; c.stroke();
+   
 
     //Text informatics
     c.font = '20px sans-serif';
@@ -303,7 +369,7 @@ function Render(c) {
     H+=30;
     c.fillText("Circumcenter: ("+Math.round(circumcenter.x)+", "+Math.round(circumcenter.y)+")",5,H);
     H+=20;
-    c.fillText("Circumcenter radius: "+Math.round(100*circumcenter.radius)/100,5,H);
+    c.fillText("Circumcircle radius: "+Math.round(100*circumcenter.radius)/100,5,H);
     H+=30;
     c.fillStyle="white";
     var AP = (Math.round((area/perimeter)/((AB.dist+BC.dist+CA.dist)/3)*100000)/100000);
@@ -323,10 +389,7 @@ function Render(c) {
     c.fillText("C radius: "+Math.round(100*Cc2.dist)/100,5,H);
 
 
-    c.fillStyle="white";
-    c.fillText("Double click to equilateralize",5,window.innerHeight-5);
     
-    /*
     c.fillStyle="red";
     H+=30;
     c.fillText("A alpha: "+Math.round(100*alphaA)/100,5,H);
@@ -336,5 +399,8 @@ function Render(c) {
     c.fillStyle="blue";
     H+=20;
     c.fillText("C alpha: "+Math.round(100*alphaC)/100,5,H);
-    */
+    
+
+    c.fillStyle="white";
+    c.fillText("Double click to equilateralize",5,window.innerHeight-5);
 }

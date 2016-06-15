@@ -54,7 +54,7 @@ $(document).click(function(e) {
 */
 
 $(document).contextmenu(function(e) {
-    console.log("derp");
+    
 });    
 
 
@@ -78,6 +78,7 @@ function Render(c) {
         center.C = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
 
     var area = Math.abs((A.pos.x * (B.pos.y - C.pos.y) + B.pos.x * (C.pos.y - A.pos.y) + C.pos.x * (A.pos.y - B.pos.y)) / 2),
+        max
         
         //dA = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(A.pos.x - C.pos.x, 2) + Math.pow(A.pos.y - C.pos.y, 2))) / 2,
         //dB = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(B.pos.x - C.pos.x, 2) + Math.pow(B.pos.y - C.pos.y, 2))) / 2,
@@ -239,8 +240,16 @@ function Render(c) {
     //CA → AB. A
     c.beginPath(); c.moveTo(CA.x, CA.y); c.quadraticCurveTo(A.pos.x, A.pos.y, AB.x, AB.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
     
-    //Centroid circle
-    c.beginPath(); var centroidR = (center.AB + center.BC + center.CA) / 3; c.arc(center.x, center.y, centroidR, 0, 2 * Math.PI); c.strokeStyle = "white"; c.lineWidth = 1; c.stroke();
+    //Circumcenter circle
+    c.beginPath(); 
+    var DD = 2*(A.pos.x*(B.pos.y-C.pos.y)+B.pos.x*(C.pos.y-A.pos.y)+C.pos.x*(A.pos.y-B.pos.y)),
+        circumcenter = { x: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(B.pos.y-C.pos.y) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(C.pos.y-A.pos.y) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(A.pos.y-B.pos.y))/DD,
+                         y: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(C.pos.x-B.pos.x) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(A.pos.x-C.pos.x) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(B.pos.x-A.pos.x))/DD,
+                         radius: 0 };
+        circumcenter.radius = Math.sqrt(Math.pow(circumcenter.x-A.pos.x, 2) + Math.pow(circumcenter.y-A.pos.y, 2));
+    
+    c.arc(circumcenter.x, circumcenter.y, circumcenter.radius, 0, 2 * Math.PI); 
+    c.strokeStyle = "white"; c.lineWidth = 1; c.stroke();
     
 
     //Text informatics
@@ -273,16 +282,18 @@ function Render(c) {
     c.fillText("•CA: ("+Math.round(CA.x)+", "+Math.round(CA.y)+")    Length: "+Math.round(CA.dist*100)/100,5,H);
     c.fillStyle="orange";
     H+=30;
-    c.fillText("Center: ("+Math.round(center.x)+", "+Math.round(center.y)+")",5,H);
+    c.fillText("Centroid: ("+Math.round(center.x)+", "+Math.round(center.y)+")",5,H);
     H+=20;
-    c.fillText("A → Center: "+Math.round(center.A*100)/100,5,H);
+    c.fillText("Altitude BC: "+Math.round(center.A*100)/100,5,H);
     H+=20;
-    c.fillText("B → Center: "+Math.round(center.B*100)/100,5,H);
+    c.fillText("Altitude CA: "+Math.round(center.B*100)/100,5,H);
     H+=20;
-    c.fillText("C → Center: "+Math.round(center.C*100)/100,5,H);
+    c.fillText("Altitude AB: "+Math.round(center.C*100)/100,5,H);
     c.fillStyle="yellow";
     H+=30;
-    c.fillText("Centroid radius: "+Math.round(100*centroidR)/100,5,H);
+    c.fillText("Circumcenter: ("+Math.round(circumcenter.x)+", "+Math.round(circumcenter.y)+")",5,H);
+    H+=20;
+    c.fillText("Circumcenter radius: "+Math.round(100*circumcenter.radius)/100,5,H);
     H+=30;
     c.fillStyle="white";
     var AP = (Math.round((area/perimeter)/((AB.dist+BC.dist+CA.dist)/3)*100000)/100000);

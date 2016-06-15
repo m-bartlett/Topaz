@@ -299,7 +299,7 @@ function Render(c) {
     c.fillText("B radius: "+Math.round(100*Bc2.dist)/100,5,H);
     c.fillStyle="blue";
     H+=20;
-    c.fillText("C radius: "+Math.round(10*Cc2.dist)/100,5,H);
+    c.fillText("C radius: "+Math.round(100*Cc2.dist)/100,5,H);
     c.fillStyle="red";
     H+=30;
     

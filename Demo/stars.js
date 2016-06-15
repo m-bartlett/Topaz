@@ -4,7 +4,7 @@
     A = new Dot(0),
     B = new Dot(0),
     C = new Dot(0);
-    maxDist=800;
+    maxDist=1000;
     dots = [A, B, C];
     center = { x: 0, y: 0, A: 0, B: 0, C: 0, AB: 0, BC: 0, CA:0 };
     
@@ -103,6 +103,14 @@ function Render(c) {
     center.A = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2));
     center.B = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2));
     center.C = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
+
+    var DD = 2*(A.pos.x*(B.pos.y-C.pos.y)+B.pos.x*(C.pos.y-A.pos.y)+C.pos.x*(A.pos.y-B.pos.y)),
+    circumcenter = { x: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(B.pos.y-C.pos.y) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(C.pos.y-A.pos.y) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(A.pos.y-B.pos.y))/DD,
+       y: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(C.pos.x-B.pos.x) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(A.pos.x-C.pos.x) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(B.pos.x-A.pos.x))/DD,
+       radius: 0 };
+       circumcenter.radius = Math.sqrt(Math.pow(circumcenter.x-A.pos.x, 2) + Math.pow(circumcenter.y-A.pos.y, 2));
+
+
     var maxRadius = (Math.sqrt(3)/3)*(maxDist);  
     var area = Math.abs((A.pos.x * (B.pos.y - C.pos.y) + B.pos.x * (C.pos.y - A.pos.y) + C.pos.x * (A.pos.y - B.pos.y)) / 2),
 
@@ -131,21 +139,18 @@ function Render(c) {
         grd.addColorStop(0, cC); grd.addColorStop(1, cB);        
 
     / //A
-    c.beginPath(); c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath(); c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath(); c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Line
     c.beginPath(); c.moveTo(C.pos.x, C.pos.y); 
-
-    c.quadraticCurveTo(BC.x, BC.y, center.x, center.y);
-    c.quadraticCurveTo(BC.x, BC.y, B.pos.x, B.pos.y);        
-    c.lineTo(C.pos.x, C.pos.y); 
-    c.fillStyle = grd; c.fill();   
+    c.lineTo(B.pos.x, B.pos.y);        
+    c.strokeStyle = grd; c.lineWidth=5; c.stroke();   
 
     } else if (center.B > maxRadius) {
         var grd = c.createLinearGradient(C.pos.x, C.pos.y, A.pos.x, A.pos.y),        
@@ -159,21 +164,18 @@ function Render(c) {
         grd.addColorStop(0, cC); grd.addColorStop(1, cA);        
 
     / //A
-    c.beginPath(); c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath(); c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath(); c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Line
     c.beginPath(); c.moveTo(C.pos.x, C.pos.y); 
-
-    c.quadraticCurveTo(CA.x, CA.y, center.x, center.y);
-    c.quadraticCurveTo(CA.x, CA.y, A.pos.x, A.pos.y);        
-    c.lineTo(C.pos.x, C.pos.y); 
-    c.fillStyle = grd; c.fill();    
+    c.lineTo(A.pos.x, A.pos.y); 
+    c.strokeStyle = grd; c.lineWidth=5; c.stroke();    
 
     } else if (center.C > maxRadius) {
         var grd = c.createLinearGradient(A.pos.x, A.pos.y, B.pos.x, B.pos.y),        
@@ -187,30 +189,31 @@ function Render(c) {
         grd.addColorStop(0, cA); grd.addColorStop(1, cB);        
 
     / //A
-    c.beginPath(); c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath(); c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath(); c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Line
-    c.beginPath(); c.moveTo(A.pos.x, A.pos.y); 
-
-    c.quadraticCurveTo(AB.x, AB.y, center.x, center.y);
-    c.quadraticCurveTo(AB.x, AB.y, B.pos.x, B.pos.y);        
-    c.lineTo(A.pos.x, A.pos.y); 
-    c.fillStyle = grd; c.fill();
+    c.beginPath(); c.moveTo(A.pos.x, A.pos.y);    
+    c.lineTo(B.pos.x, B.pos.y); 
+    c.strokeStyle = grd; c.lineWidth=5; c.stroke();
 } else {
 
     var gA = c.createLinearGradient(A.pos.x, A.pos.y, BC.x, BC.y),
         gB = c.createLinearGradient(B.pos.x, B.pos.y, CA.x, CA.y),
         gC = c.createLinearGradient(C.pos.x, C.pos.y, AB.x, AB.y),
 
-        alphaA = 1-((center.A/maxRadius)),        
-        alphaB = 1-((center.B/maxRadius)),        
-        alphaC = 1-((center.C/maxRadius)),
+        //alphaA = 1-(center.A/maxRadius),
+        //alphaB = 1-(center.B/maxRadius),        
+        //alphaC = 1-(center.C/maxRadius),
+
+        alphaA = (1-(center.A/maxRadius))*(1-(CA.dist/maxDist))*(1-(AB.dist/maxDist)),
+        alphaB = (1-(center.B/maxRadius))*(1-(BC.dist/maxDist))*(1-(AB.dist/maxDist)),        
+        alphaC = (1-(center.C/maxRadius))*(1-(CA.dist/maxDist))*(1-(BC.dist/maxDist)),
                 
         cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alphaA + ")",
         cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + alphaB + ")",
@@ -227,13 +230,13 @@ function Render(c) {
 
 
     //A
-    c.beginPath(); c.arc(A.pos.x, A.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath(); c.arc(B.pos.x, B.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath(); c.arc(C.pos.x, C.pos.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Solid Triangle
     c.beginPath();
@@ -277,25 +280,25 @@ function Render(c) {
     c.beginPath(); c.moveTo(CA.x, CA.y); c.lineTo(B.pos.x, B.pos.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,0,1)"; c.stroke();
 
     //AB
-    c.beginPath(); c.arc(AB.x, AB.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill(); 
+    c.beginPath(); c.arc(AB.x, AB.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill(); 
 
     //CA 
-    c.beginPath(); c.arc(CA.x, CA.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(CA.x, CA.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //BC
-    c.beginPath(); c.arc(BC.x, BC.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(BC.x, BC.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Center
-    c.beginPath(); c.arc(center.x, center.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+    c.beginPath(); c.arc(center.x, center.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //Ac2
-    c.beginPath(); c.arc(Ac2.x, Ac2.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+    c.beginPath(); c.arc(Ac2.x, Ac2.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //Bc2
-    c.beginPath(); c.arc(Bc2.x, Bc2.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+    c.beginPath(); c.arc(Bc2.x, Bc2.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //Cc2
-    c.beginPath(); c.arc(Cc2.x, Cc2.y, 5, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+    c.beginPath(); c.arc(Cc2.x, Cc2.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //AB → BC, center
     c.beginPath(); c.moveTo(AB.x, AB.y); c.quadraticCurveTo(center.x, center.y, BC.x, BC.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,0,255,1)"; c.stroke();
@@ -318,14 +321,8 @@ function Render(c) {
     
     //Circumcenter circle
     c.beginPath(); 
-    var DD = 2*(A.pos.x*(B.pos.y-C.pos.y)+B.pos.x*(C.pos.y-A.pos.y)+C.pos.x*(A.pos.y-B.pos.y)),
-    circumcenter = { x: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(B.pos.y-C.pos.y) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(C.pos.y-A.pos.y) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(A.pos.y-B.pos.y))/DD,
-       y: ((Math.pow(A.pos.x, 2)+Math.pow(A.pos.y, 2))*(C.pos.x-B.pos.x) + (Math.pow(B.pos.x, 2)+Math.pow(B.pos.y, 2))*(A.pos.x-C.pos.x) + (Math.pow(C.pos.x, 2)+Math.pow(C.pos.y, 2))*(B.pos.x-A.pos.x))/DD,
-       radius: 0 };
-       circumcenter.radius = Math.sqrt(Math.pow(circumcenter.x-A.pos.x, 2) + Math.pow(circumcenter.y-A.pos.y, 2));
-
-       c.arc(circumcenter.x, circumcenter.y, circumcenter.radius, 0, 2 * Math.PI); 
-       c.strokeStyle = "white"; c.lineWidth = 1; c.stroke();
+    c.arc(circumcenter.x, circumcenter.y, circumcenter.radius, 0, 2 * Math.PI); 
+    c.strokeStyle = "white"; c.lineWidth = 1; c.stroke();
    
 
     //Text informatics

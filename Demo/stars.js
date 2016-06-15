@@ -53,8 +53,17 @@ $(document).click(function(e) {
 }();
 */
 
-$(document).contextmenu(function(e) {
-    
+//Equilateralize
+$(document).dblclick(function(e) {
+    var dist1 = Math.sqrt(Math.pow(B.pos.x-C.pos.x, 2)+Math.pow(B.pos.y-C.pos.y, 2));
+    dist1 /= 2;
+    B.pos.x = Math.round( C.pos.x + (C.pos.x > window.innerWidth ? -dist1 : dist1));
+    B.pos.y = C.pos.y;
+    A.pos.x = Math.round((B.pos.x+C.pos.x)/2);
+    A.pos.y = Math.round(B.pos.y-(dist1*Math.sqrt(3)/2));
+    console.log(A.pos.y);
+    context.clearRect(0, 0, canvas.width, canvas.height);    
+    Render(context);
 });    
 
 
@@ -311,12 +320,14 @@ function Render(c) {
     c.fillStyle="blue";
     H+=20;
     c.fillText("C radius: "+Math.round(100*Cc2.dist)/100,5,H);
-    c.fillStyle="red";
-    H+=30;
-    
-    
+
+
+    c.fillStyle="white";
+    c.fillText("Double click to equilateralize",5,window.innerHeight-5);
     
     /*
+    c.fillStyle="red";
+    H+=30;
     c.fillText("A alpha: "+Math.round(100*alphaA)/100,5,H);
     c.fillStyle="green";
     H+=20;

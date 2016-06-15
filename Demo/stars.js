@@ -14,9 +14,7 @@ $(document).ready(function() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     A.r=255; A.g=0; A.b=0;    B.r=0; B.g=255; B.b=0;    C.r=0; C.g=0; C.b=255;  
-    A.pos.x=721; A.pos.y=57;
-    B.pos.x=1290; B.pos.y=688;
-    C.pos.x=254; C.pos.y=699;
+    A.pos.x=721; A.pos.y=57;    B.pos.x=1290; B.pos.y=500;    C.pos.x=254; C.pos.y=500;
     Render(context);
 });
 
@@ -48,6 +46,13 @@ $(document).click(function(e) {
     Render(context);
 });
 
+/*
+! function foo(){
+	conole.log("shit"); 
+	setTimeout(foo, 0); 
+}();
+*/
+
 $(document).contextmenu(function(e) {
     console.log("derp");
 });    
@@ -67,7 +72,7 @@ function Dot(ID) {
 
 function Render(c) {
 
-    var center = { x: (A.pos.x + B.pos.x + C.pos.x) / 3, y: (A.pos.y + B.pos.y + C.pos.y) / 3, A: 0, B: 0, C: 0 };
+    var center = { x: (A.pos.x + B.pos.x + C.pos.x) / 3, y: (A.pos.y + B.pos.y + C.pos.y) / 3, A: 0, B: 0, C: 0, AB: 0, BC: 0, CA:0 };
         center.A = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2));
         center.B = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2));
         center.C = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
@@ -88,7 +93,7 @@ function Render(c) {
         BC = { x: (B.pos.x + C.pos.x) / 2, y: (B.pos.y + C.pos.y) / 2, dist: Math.sqrt(Math.pow(C.pos.x-B.pos.x, 2) + Math.pow(C.pos.y-B.pos.y, 2)) },
 
         CA = { x: (C.pos.x + A.pos.x) / 2, y: (C.pos.y + A.pos.y) / 2, dist: Math.sqrt(Math.pow(A.pos.x-C.pos.x, 2) + Math.pow(A.pos.y-C.pos.y, 2)) },
-
+        
         perimeter = AB.dist+BC.dist+CA.dist,
 
         Ac2 = { x: (A.pos.x + center.x) / 2, y: (A.pos.y + center.y) / 2, dist: center.A / 2 },
@@ -127,6 +132,10 @@ function Render(c) {
 
         c0 = "rgba(0,0,0,0)";
 
+    center.AB = Math.sqrt(Math.pow(center.x-AB.x, 2) + Math.pow(center.y-AB.y, 2));
+    center.BC = Math.sqrt(Math.pow(center.x-BC.x, 2) + Math.pow(center.y-BC.y, 2));
+    center.CA = Math.sqrt(Math.pow(center.x-CA.x, 2) + Math.pow(center.y-CA.y, 2));
+    
     gA.addColorStop(0, cA); gA.addColorStop(1, c0);
     gB.addColorStop(0, cB); gB.addColorStop(1, c0);
     gC.addColorStop(0, cC); gC.addColorStop(1, c0);
@@ -229,48 +238,80 @@ function Render(c) {
 
     //CA → AB. A
     c.beginPath(); c.moveTo(CA.x, CA.y); c.quadraticCurveTo(A.pos.x, A.pos.y, AB.x, AB.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
+    
+    //Centroid circle
+    c.beginPath(); var centroidR = (center.AB + center.BC + center.CA) / 3; c.arc(center.x, center.y, centroidR, 0, 2 * Math.PI); c.strokeStyle = "white"; c.lineWidth = 1; c.stroke();
+    
 
     //Text informatics
     c.font = '20px sans-serif';
+    var H = 25;
     var stringA = "A: ("+A.pos.x+", "+A.pos.y+")   ";
     c.fillStyle="red";
-    c.fillText(stringA,5,25);
+    c.fillText(stringA,5,H);
 
     var stringB = "B: ("+B.pos.x+", "+B.pos.y+")   ";
     c.fillStyle="green";
-    c.fillText(stringB,5+stringA.length*8,25);
+    c.fillText(stringB,140,H);
 
     var stringC = "C: ("+C.pos.x+", "+C.pos.y+")   ";
     c.fillStyle="blue";
-    c.fillText(stringC,5+stringA.length*8+stringB.length*8,25);
+    c.fillText(stringC,290,H);
     c.fillStyle="white";
+    H+=25;
     
-    c.fillText("Area: "+area+"    Perimeter: "+Math.round(perimeter*100)/100,5,50); 
+    c.fillText("Area: "+area+"    Perimeter: "+Math.round(perimeter*100)/100,5,H);
+    H+=30; 
 
     c.fillStyle="yellow";
-    c.fillText("•AB: ("+Math.round(AB.x)+", "+Math.round(AB.y)+")    Length: "+Math.round(AB.dist*100)/100,5,80);
+    c.fillText("•AB: ("+Math.round(AB.x)+", "+Math.round(AB.y)+")    Length: "+Math.round(AB.dist*100)/100,5,H);
     c.fillStyle="cyan";
-    c.fillText("•BC: ("+Math.round(BC.x)+", "+Math.round(BC.y)+")    Length: "+Math.round(BC.dist*100)/100,5,100);
+    H+=20;
+    c.fillText("•BC: ("+Math.round(BC.x)+", "+Math.round(BC.y)+")    Length: "+Math.round(BC.dist*100)/100,5,H);
     c.fillStyle="magenta";
-    c.fillText("•CA: ("+Math.round(CA.x)+", "+Math.round(CA.y)+")    Length: "+Math.round(CA.dist*100)/100,5,120);
+    H+=20;
+    c.fillText("•CA: ("+Math.round(CA.x)+", "+Math.round(CA.y)+")    Length: "+Math.round(CA.dist*100)/100,5,H);
     c.fillStyle="orange";
-    c.fillText("Center: ("+Math.round(center.x)+", "+Math.round(center.y)+")",5,150);
-    c.fillText("A → Center: "+Math.round(center.A*100)/100,5,170);
-    c.fillText("B → Center: "+Math.round(center.B*100)/100,5,190);
-    c.fillText("C → Center: "+Math.round(center.C*100)/100,5,210);
+    H+=30;
+    c.fillText("Center: ("+Math.round(center.x)+", "+Math.round(center.y)+")",5,H);
+    H+=20;
+    c.fillText("A → Center: "+Math.round(center.A*100)/100,5,H);
+    H+=20;
+    c.fillText("B → Center: "+Math.round(center.B*100)/100,5,H);
+    H+=20;
+    c.fillText("C → Center: "+Math.round(center.C*100)/100,5,H);
+    c.fillStyle="yellow";
+    H+=30;
+    c.fillText("Centroid radius: "+Math.round(100*centroidR)/100,5,H);
+    H+=30;
     c.fillStyle="white";
-    c.fillText("Area/Perimeter: "+(Math.round((area/perimeter)/((AB.dist+BC.dist+CA.dist)/3)*100000)/100000),5,240);
-    c.fillText("Ideal A/P Ratio: "+0.14434,5,260);
+    var AP = (Math.round((area/perimeter)/((AB.dist+BC.dist+CA.dist)/3)*100000)/100000);
+    c.fillText("Area/Perimeter: "+AP,5,H);
+    H+=20;
+    c.fillText("Ideal A/P Ratio: "+0.14434,5,H);
+    H+=20;
+    c.fillText("Deviation: "+Math.round(1000*Math.abs(AP-0.14434)/0.14434)/10+"%",5,H);
     c.fillStyle="red";
-    c.fillText("A radius: "+Math.round(100*Ac2.dist)/100,5,290);
+    H+=30;
+    c.fillText("A radius: "+Math.round(100*Ac2.dist)/100,5,H);
     c.fillStyle="green";
-    c.fillText("B radius: "+Math.round(100*Bc2.dist)/100,5,310);
+    H+=20;
+    c.fillText("B radius: "+Math.round(100*Bc2.dist)/100,5,H);
     c.fillStyle="blue";
-    c.fillText("C radius: "+Math.round(100*Cc2.dist)/100,5,330);
+    H+=20;
+    c.fillText("C radius: "+Math.round(10*Cc2.dist)/100,5,H);
     c.fillStyle="red";
-    c.fillText("A alpha: "+Math.round(100*alphaA)/100,5,360);
+    H+=30;
+    
+    
+    
+    /*
+    c.fillText("A alpha: "+Math.round(100*alphaA)/100,5,H);
     c.fillStyle="green";
-    c.fillText("B alpha: "+Math.round(100*alphaB)/100,5,380);
+    H+=20;
+    c.fillText("B alpha: "+Math.round(100*alphaB)/100,5,H);
     c.fillStyle="blue";
-    c.fillText("C alpha: "+Math.round(100*alphaC)/100,5,400);
+    H+=20;
+    c.fillText("C alpha: "+Math.round(100*alphaC)/100,5,H);
+    */
 }

@@ -13,7 +13,7 @@ $(document).ready(function() {
     document.getElementById('canvas').appendChild(canvas);
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    //A.r=255; A.g=0; A.b=0;    B.r=0; B.g=255; B.b=0;    C.r=0; C.g=0; C.b=255;  
+    A.r=255; A.g=0; A.b=0;    B.r=0; B.g=255; B.b=0;    C.r=0; C.g=0; C.b=255;  
     A.pos.x=721; A.pos.y=57;
     B.pos.x=1290; B.pos.y=688;
     C.pos.x=254; C.pos.y=699;

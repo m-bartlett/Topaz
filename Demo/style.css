@@ -1,7 +1,7 @@
 /* Body has a margin, it's annoying. Fuck it. */
 body {
   margin: 0;
-  background: black;
+  background: white;
   /*background-image: url("memes.jpg");*/
   /*background-size:100%;*/
   overflow:hidden

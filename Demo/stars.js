@@ -220,6 +220,10 @@ function Render(c) {
         if (alphaA > .5) alphaA *= (alphaA-.5)+1;
         if (alphaB > .5) alphaB *= (alphaB-.5)+1;
         if (alphaC > .5) alphaC *= (alphaC-.5)+1;
+
+        //alphaA *= (alphaA)+1;
+        //alphaB *= (alphaB)+1;
+        //alphaC *= (alphaC)+1;
                 
         var cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alphaA + ")",
         cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + alphaB + ")",

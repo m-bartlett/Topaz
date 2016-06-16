@@ -211,22 +211,34 @@ function Render(c) {
         //alphaB = 1-(center.B/maxRadius),        
         //alphaC = 1-(center.C/maxRadius),
 
-        alphaA = (1-(center.A/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(AB.dist/maxDist))),
+        //alphaA = (1-(center.A/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(AB.dist/maxDist))),
+ 
+        //alphaB = (1-(center.B/maxRadius))*Math.min((1-(BC.dist/maxDist)),(1-(AB.dist/maxDist))),        
         
-        alphaB = (1-(center.B/maxRadius))*Math.min((1-(BC.dist/maxDist)),(1-(AB.dist/maxDist))),        
-        
-        alphaC = (1-(center.C/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(BC.dist/maxDist)));
+        //alphaC = (1-(center.C/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(BC.dist/maxDist)));
 
-        alphaA = Math.min(alphaA, alphaB, alphaC);
-        alphaB = Math.min(alphaA, alphaB, alphaC);
-        alphaC = Math.min(alphaA, alphaB, alphaC);
-        
+        alphaA = 1-(center.A/maxRadius);
+        alphaB = 1-(center.B/maxRadius);        
+        alphaC = 1-(center.C/maxRadius);        
+
         if (alphaA > .5) alphaA *= (alphaA-.5)+1;
         else alphaA /= (alphaA)+1;
         if (alphaB > .5) alphaB *= (alphaB-.5)+1;
         else alphaB /= (alphaB)+1;
         if (alphaC > .5) alphaC *= (alphaC-.5)+1;
         else alphaC /= (alphaC)+1;
+
+        alphaA *= Math.min(alphaA, alphaB, alphaC);
+        alphaB *= Math.min(alphaA, alphaB, alphaC);
+        alphaC *= Math.min(alphaA, alphaB, alphaC);        
+
+        // alphaA = Math.min(alphaA, alphaB, alphaC);
+        // alphaB = Math.min(alphaA, alphaB, alphaC);
+        // alphaC = Math.min(alphaA, alphaB, alphaC);
+        
+        
+        
+        
 
         //alphaA *= (alphaA)+1;
         //alphaB *= (alphaB)+1;

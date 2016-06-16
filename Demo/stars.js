@@ -216,6 +216,10 @@ function Render(c) {
         alphaB = (1-(center.B/maxRadius))*Math.min((1-(BC.dist/maxDist)),(1-(AB.dist/maxDist))),        
         
         alphaC = (1-(center.C/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(BC.dist/maxDist)));
+
+        alphaA = Math.min(alphaA, alphaB, alphaC);
+        alphaB = Math.min(alphaA, alphaB, alphaC);
+        alphaC = Math.min(alphaA, alphaB, alphaC);
         
         if (alphaA > .5) alphaA *= (alphaA-.5)+1;
         else alphaA /= (alphaA)+1;

@@ -222,11 +222,11 @@ function Render(c) {
         alphaC = 1-(center.C/maxRadius);        
 
         if (alphaA > .5) alphaA *= (alphaA-.5)+1;
-        else alphaA /= (alphaA)+1;
+        //else alphaA /= (alphaA)+1;        
         if (alphaB > .5) alphaB *= (alphaB-.5)+1;
-        else alphaB /= (alphaB)+1;
+        //else alphaB /= (alphaB)+1;
         if (alphaC > .5) alphaC *= (alphaC-.5)+1;
-        else alphaC /= (alphaC)+1;
+        //else alphaC /= (alphaC)+1;
 
         alphaA *= Math.min(alphaA, alphaB, alphaC);
         alphaB *= Math.min(alphaA, alphaB, alphaC);
@@ -235,10 +235,6 @@ function Render(c) {
         // alphaA = Math.min(alphaA, alphaB, alphaC);
         // alphaB = Math.min(alphaA, alphaB, alphaC);
         // alphaC = Math.min(alphaA, alphaB, alphaC);
-        
-        
-        
-        
 
         //alphaA *= (alphaA)+1;
         //alphaB *= (alphaB)+1;
@@ -351,7 +347,7 @@ function Render(c) {
     //Circumcenter circle
     c.beginPath(); 
     c.arc(circumcenter.x, circumcenter.y, circumcenter.radius, 0, 2 * Math.PI); 
-    c.strokeStyle = "white"; c.lineWidth = 1; c.stroke();
+    c.strokeStyle = "rgba(127,127,127,1)"; c.lineWidth = 1; c.stroke();
    
 
     //Text informatics
@@ -368,7 +364,7 @@ function Render(c) {
     var stringC = "C: ("+C.pos.x+", "+C.pos.y+")   ";
     c.fillStyle="blue";
     c.fillText(stringC,290,H);
-    c.fillStyle="white";
+    c.fillStyle="rgba(127,127,127,1)";
     H+=25;
     
     c.fillText("Area: "+area+"    Perimeter: "+Math.round(perimeter*100)/100,5,H);
@@ -397,15 +393,18 @@ function Render(c) {
     H+=20;
     c.fillText("Circumcircle radius: "+Math.round(100*circumcenter.radius)/100,5,H);
     H+=30;
-    c.fillStyle="white";
+    c.fillStyle="rgba(127,127,127,1)";
     var AP = (Math.round((area/perimeter)/((AB.dist+BC.dist+CA.dist)/3)*100000)/100000);
     c.fillText("Area/Perimeter: "+AP,5,H);
     H+=20;
     c.fillText("Ideal A/P Ratio: "+0.14434,5,H);
     H+=20;
     c.fillText("Deviation: "+Math.round(1000*Math.abs(AP-0.14434)/0.14434)/10+"%",5,H);
-    c.fillStyle="red";
     H+=30;
+    c.fillStyle="rgba(127,127,127,1)";
+    c.fillText("Max radius: "+maxRadius,5,H);
+    c.fillStyle="red";
+    H+=20;
     c.fillText("A radius: "+Math.round(100*center.A)/100,5,H);
     c.fillStyle="green";
     H+=20;
@@ -427,6 +426,6 @@ function Render(c) {
     c.fillText("C alpha: "+Math.round(100*alphaC)/100,5,H);
     
 
-    c.fillStyle="white";
+    c.fillStyle="rgba(127,127,127,1)";
     c.fillText("Double click to equilateralize",5,window.innerHeight-5);
 }

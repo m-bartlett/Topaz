@@ -4,7 +4,7 @@
     A = new Dot(0),
     B = new Dot(0),
     C = new Dot(0);
-    maxDist=1000;
+    maxDist=800;
     dots = [A, B, C];
     center = { x: 0, y: 0, A: 0, B: 0, C: 0, AB: 0, BC: 0, CA:0 };
     
@@ -139,13 +139,13 @@ function Render(c) {
         grd.addColorStop(0, cC); grd.addColorStop(1, cB);        
 
     / //A
-    c.beginPath(); c.arc(A.pos.x, A.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath(); c.arc(B.pos.x, B.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath(); c.arc(C.pos.x, C.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Line
     c.beginPath(); c.moveTo(C.pos.x, C.pos.y); 
@@ -164,13 +164,13 @@ function Render(c) {
         grd.addColorStop(0, cC); grd.addColorStop(1, cA);        
 
     / //A
-    c.beginPath(); c.arc(A.pos.x, A.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath(); c.arc(B.pos.x, B.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath(); c.arc(C.pos.x, C.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Line
     c.beginPath(); c.moveTo(C.pos.x, C.pos.y); 
@@ -189,13 +189,13 @@ function Render(c) {
         grd.addColorStop(0, cA); grd.addColorStop(1, cB);        
 
     / //A
-    c.beginPath(); c.arc(A.pos.x, A.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath(); c.arc(B.pos.x, B.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath(); c.arc(C.pos.x, C.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Line
     c.beginPath(); c.moveTo(A.pos.x, A.pos.y);    
@@ -211,11 +211,17 @@ function Render(c) {
         //alphaB = 1-(center.B/maxRadius),        
         //alphaC = 1-(center.C/maxRadius),
 
-        alphaA = (1-(center.A/maxRadius))*(1-(CA.dist/maxDist))*(1-(AB.dist/maxDist)),
-        alphaB = (1-(center.B/maxRadius))*(1-(BC.dist/maxDist))*(1-(AB.dist/maxDist)),        
-        alphaC = (1-(center.C/maxRadius))*(1-(CA.dist/maxDist))*(1-(BC.dist/maxDist)),
+        alphaA = (1-(center.A/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(AB.dist/maxDist))),
+        
+        alphaB = (1-(center.B/maxRadius))*Math.min((1-(BC.dist/maxDist)),(1-(AB.dist/maxDist))),        
+        
+        alphaC = (1-(center.C/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(BC.dist/maxDist)));
+        
+        if (alphaA > .5) alphaA *= (alphaA-.5)+1;
+        if (alphaB > .5) alphaB *= (alphaB-.5)+1;
+        if (alphaC > .5) alphaC *= (alphaC-.5)+1;
                 
-        cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alphaA + ")",
+        var cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alphaA + ")",
         cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + alphaB + ")",
         cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + alphaC + ")",
         c0 = "rgba(0,0,0,0)";
@@ -230,13 +236,13 @@ function Render(c) {
 
 
     //A
-    c.beginPath(); c.arc(A.pos.x, A.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(A.pos.x, A.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //B
-    c.beginPath(); c.arc(B.pos.x, B.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(B.pos.x, B.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //C
-    c.beginPath(); c.arc(C.pos.x, C.pos.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(C.pos.x, C.pos.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Solid Triangle
     c.beginPath();
@@ -252,9 +258,9 @@ function Render(c) {
 
     c.beginPath();
     c.moveTo(A.pos.x, A.pos.y);
-    c.quadraticCurveTo(center.x, center.y, B.pos.x, B.pos.y);
-    c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
-    c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
+    //c.quadraticCurveTo(center.x, center.y, B.pos.x, B.pos.y);
+    //c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
+    //c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
 
     cA = "rgba(" + (255-A.r) + "," + (255-A.g) + "," + (255-A.b) + "," + alphaA + ")",
     cB = "rgba(" + (255-B.r) + "," + (255-B.g) + "," + (255-B.b) + "," + alphaB + ")",
@@ -280,43 +286,43 @@ function Render(c) {
     c.beginPath(); c.moveTo(CA.x, CA.y); c.lineTo(B.pos.x, B.pos.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,0,1)"; c.stroke();
 
     //AB
-    c.beginPath(); c.arc(AB.x, AB.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill(); 
+    c.beginPath(); c.arc(AB.x, AB.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill(); 
 
     //CA 
-    c.beginPath(); c.arc(CA.x, CA.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(CA.x, CA.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //BC
-    c.beginPath(); c.arc(BC.x, BC.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
+    c.beginPath(); c.arc(BC.x, BC.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,255,255,1)"; c.fill();
 
     //Center
-    c.beginPath(); c.arc(center.x, center.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+    c.beginPath(); c.arc(center.x, center.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //Ac2
-    c.beginPath(); c.arc(Ac2.x, Ac2.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+    c.beginPath(); c.arc(Ac2.x, Ac2.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //Bc2
-    c.beginPath(); c.arc(Bc2.x, Bc2.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+    c.beginPath(); c.arc(Bc2.x, Bc2.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //Cc2
-    c.beginPath(); c.arc(Cc2.x, Cc2.y, circumcenter.radius/60, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
+    c.beginPath(); c.arc(Cc2.x, Cc2.y, 2.55, 0, 2 * Math.PI); c.fillStyle = "rgba(255,127,0,1)"; c.fill();
 
     //AB → BC, center
-    c.beginPath(); c.moveTo(AB.x, AB.y); c.quadraticCurveTo(center.x, center.y, BC.x, BC.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,0,255,1)"; c.stroke();
+    //c.beginPath(); c.moveTo(AB.x, AB.y); c.quadraticCurveTo(center.x, center.y, BC.x, BC.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,0,255,1)"; c.stroke();
 
     //AB → BC, B
-    c.beginPath(); c.moveTo(AB.x, AB.y); c.quadraticCurveTo(B.pos.x, B.pos.y, BC.x, BC.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,0,255,1)"; c.stroke();
+    //c.beginPath(); c.moveTo(AB.x, AB.y); c.quadraticCurveTo(B.pos.x, B.pos.y, BC.x, BC.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,0,255,1)"; c.stroke();
 
     //BC → CA, center
-    c.beginPath(); c.moveTo(BC.x, BC.y); c.quadraticCurveTo(center.x, center.y, CA.x, CA.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,255,0,1)"; c.stroke();
+    //c.beginPath(); c.moveTo(BC.x, BC.y); c.quadraticCurveTo(center.x, center.y, CA.x, CA.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,255,0,1)"; c.stroke();
 
     //BC → CA, C
-    c.beginPath(); c.moveTo(BC.x, BC.y); c.quadraticCurveTo(C.pos.x, C.pos.y, CA.x, CA.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,255,0,1)"; c.stroke();
+    //c.beginPath(); c.moveTo(BC.x, BC.y); c.quadraticCurveTo(C.pos.x, C.pos.y, CA.x, CA.y); c.lineWidth = 1; c.strokeStyle = "rgba(255,255,0,1)"; c.stroke();
 
     //CA → AB. center
-    c.beginPath(); c.moveTo(CA.x, CA.y); c.quadraticCurveTo(center.x, center.y, AB.x, AB.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
+    //c.beginPath(); c.moveTo(CA.x, CA.y); c.quadraticCurveTo(center.x, center.y, AB.x, AB.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
 
     //CA → AB. A
-    c.beginPath(); c.moveTo(CA.x, CA.y); c.quadraticCurveTo(A.pos.x, A.pos.y, AB.x, AB.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
+    //c.beginPath(); c.moveTo(CA.x, CA.y); c.quadraticCurveTo(A.pos.x, A.pos.y, AB.x, AB.y); c.lineWidth = 1; c.strokeStyle = "rgba(0,255,255,1)"; c.stroke();
 }
     
     //Circumcenter circle
@@ -377,13 +383,13 @@ function Render(c) {
     c.fillText("Deviation: "+Math.round(1000*Math.abs(AP-0.14434)/0.14434)/10+"%",5,H);
     c.fillStyle="red";
     H+=30;
-    c.fillText("A radius: "+Math.round(100*Ac2.dist)/100,5,H);
+    c.fillText("A radius: "+Math.round(100*center.A)/100,5,H);
     c.fillStyle="green";
     H+=20;
-    c.fillText("B radius: "+Math.round(100*Bc2.dist)/100,5,H);
+    c.fillText("B radius: "+Math.round(100*center.B)/100,5,H);
     c.fillStyle="blue";
     H+=20;
-    c.fillText("C radius: "+Math.round(100*Cc2.dist)/100,5,H);
+    c.fillText("C radius: "+Math.round(100*center.C)/100,5,H);
 
 
     

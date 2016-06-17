@@ -206,19 +206,13 @@ function Render(c) {
     var gA = c.createLinearGradient(A.pos.x, A.pos.y, BC.x, BC.y),
         gB = c.createLinearGradient(B.pos.x, B.pos.y, CA.x, CA.y),
         gC = c.createLinearGradient(C.pos.x, C.pos.y, AB.x, AB.y),
-
-        //alphaA = 1-(center.A/maxRadius),
-        //alphaB = 1-(center.B/maxRadius),        
-        //alphaC = 1-(center.C/maxRadius),
-
-        //alphaA = (1-(center.A/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(AB.dist/maxDist))),
- 
-        //alphaB = (1-(center.B/maxRadius))*Math.min((1-(BC.dist/maxDist)),(1-(AB.dist/maxDist))),        
         
+        //alphaA = (1-(center.A/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(AB.dist/maxDist))), 
+        //alphaB = (1-(center.B/maxRadius))*Math.min((1-(BC.dist/maxDist)),(1-(AB.dist/maxDist))),        
         //alphaC = (1-(center.C/maxRadius))*Math.min((1-(CA.dist/maxDist)),(1-(BC.dist/maxDist)));
 
-        alphaA = 1-(center.A/maxRadius);
-        alphaB = 1-(center.B/maxRadius);        
+        alphaA = 1-(center.A/maxRadius),
+        alphaB = 1-(center.B/maxRadius),        
         alphaC = 1-(center.C/maxRadius);        
 
         if (alphaA > .5) alphaA *= (alphaA-.5)+1;
@@ -347,7 +341,7 @@ function Render(c) {
     //Circumcenter circle
     c.beginPath(); 
     c.arc(circumcenter.x, circumcenter.y, circumcenter.radius, 0, 2 * Math.PI); 
-    c.strokeStyle = "rgba(127,127,127,1)"; c.lineWidth = 1; c.stroke();
+    c.strokeStyle = "slateGray"; c.lineWidth = 1; c.stroke();
    
 
     //Text informatics
@@ -364,13 +358,13 @@ function Render(c) {
     var stringC = "C: ("+C.pos.x+", "+C.pos.y+")   ";
     c.fillStyle="blue";
     c.fillText(stringC,290,H);
-    c.fillStyle="rgba(127,127,127,1)";
+    c.fillStyle="slateGray";
     H+=25;
     
     c.fillText("Area: "+area+"    Perimeter: "+Math.round(perimeter*100)/100,5,H);
     H+=30; 
 
-    c.fillStyle="yellow";
+    c.fillStyle="orange";
     c.fillText("•AB: ("+Math.round(AB.x)+", "+Math.round(AB.y)+")    Length: "+Math.round(AB.dist*100)/100,5,H);
     c.fillStyle="cyan";
     H+=20;
@@ -378,7 +372,7 @@ function Render(c) {
     c.fillStyle="magenta";
     H+=20;
     c.fillText("•CA: ("+Math.round(CA.x)+", "+Math.round(CA.y)+")    Length: "+Math.round(CA.dist*100)/100,5,H);
-    c.fillStyle="orange";
+    c.fillStyle="darkgoldenrod";
     H+=30;
     c.fillText("Centroid: ("+Math.round(center.x)+", "+Math.round(center.y)+")",5,H);
     H+=20;
@@ -387,13 +381,13 @@ function Render(c) {
     c.fillText("Altitude CA: "+Math.round(center.B*100)/100,5,H);
     H+=20;
     c.fillText("Altitude AB: "+Math.round(center.C*100)/100,5,H);
-    c.fillStyle="yellow";
+    c.fillStyle="orange";
     H+=30;
     c.fillText("Circumcenter: ("+Math.round(circumcenter.x)+", "+Math.round(circumcenter.y)+")",5,H);
     H+=20;
     c.fillText("Circumcircle radius: "+Math.round(100*circumcenter.radius)/100,5,H);
     H+=30;
-    c.fillStyle="rgba(127,127,127,1)";
+    c.fillStyle="slateGray";
     var AP = (Math.round((area/perimeter)/((AB.dist+BC.dist+CA.dist)/3)*100000)/100000);
     c.fillText("Area/Perimeter: "+AP,5,H);
     H+=20;
@@ -401,7 +395,7 @@ function Render(c) {
     H+=20;
     c.fillText("Deviation: "+Math.round(1000*Math.abs(AP-0.14434)/0.14434)/10+"%",5,H);
     H+=30;
-    c.fillStyle="rgba(127,127,127,1)";
+    c.fillStyle="slateGray";
     c.fillText("Max radius: "+maxRadius,5,H);
     c.fillStyle="red";
     H+=20;
@@ -411,10 +405,7 @@ function Render(c) {
     c.fillText("B radius: "+Math.round(100*center.B)/100,5,H);
     c.fillStyle="blue";
     H+=20;
-    c.fillText("C radius: "+Math.round(100*center.C)/100,5,H);
-
-
-    
+    c.fillText("C radius: "+Math.round(100*center.C)/100,5,H);    
     c.fillStyle="red";
     H+=30;
     c.fillText("A alpha: "+Math.round(100*alphaA)/100,5,H);
@@ -424,8 +415,6 @@ function Render(c) {
     c.fillStyle="blue";
     H+=20;
     c.fillText("C alpha: "+Math.round(100*alphaC)/100,5,H);
-    
-
-    c.fillStyle="rgba(127,127,127,1)";
+    c.fillStyle="slateGray";
     c.fillText("Double click to equilateralize",5,window.innerHeight-5);
 }

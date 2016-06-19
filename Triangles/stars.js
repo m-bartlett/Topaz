@@ -163,66 +163,53 @@ Dot.prototype.lines = function() {
 };
 
 function Render(c) {
+    //console.log("Frame");
     for (let L of Lines) {
         var A = L.d1,
             B = L.d2,
-            maxArea = Math.pow(maxDist, 2) * Math.sqrt(3) / 4,
-            maxPtoC = maxDist * Math.sqrt(3) / 3;
-
+            //maxArea = Math.pow(maxDist, 2) * Math.sqrt(3) / 4,
+            maxRadius = maxDist * Math.sqrt(3) / 3;
         for (var i of L.d1.ids.keys()) {
-            if (dots[i].id == B.id || dots[i].id == A.id) continue;
+            //if (dots[i].id == B.id || dots[i].id == A.id) continue;
             var C = dots[i],
-                center = { x: (A.pos.x + B.pos.x + C.pos.x) / 3, y: (A.pos.y + B.pos.y + C.pos.y) / 3 },
-                area = (A.pos.x * (B.pos.y - C.pos.y) + B.pos.x * (C.pos.y - A.pos.y) + C.pos.x * (A.pos.y - B.pos.y)) / 2,
-                distanceA = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2)),
-                distanceB = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)),
-                distanceC = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2)),
+                center = { x: (A.pos.x + B.pos.x + C.pos.x) / 3, y: (A.pos.y + B.pos.y + C.pos.y) / 3, A:0, B:0, C:0 };
+                //area = (A.pos.x * (B.pos.y - C.pos.y) + B.pos.x * (C.pos.y - A.pos.y) + C.pos.x * (A.pos.y - B.pos.y)) / 2,
+                center.A = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2)),
+                center.B = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)),
+                center.C = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(C.pos.y - center.y, 2));
+                
+                //console.log("A: "+A.id+", B: "+B.id+", C: "+C.id);               
 
-                dA = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(A.pos.x - C.pos.x, 2) + Math.pow(A.pos.y - C.pos.y, 2))) / 2,
-                dB = (Math.sqrt(Math.pow(A.pos.x - B.pos.x, 2) + Math.pow(A.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(B.pos.x - C.pos.x, 2) + Math.pow(B.pos.y - C.pos.y, 2))) / 2,
-                dC = (Math.sqrt(Math.pow(C.pos.x - B.pos.x, 2) + Math.pow(C.pos.y - B.pos.y, 2)) + Math.sqrt(Math.pow(A.pos.x - C.pos.x, 2) + Math.pow(A.pos.y - C.pos.y, 2))) / 2;
-
-            //if (distanceA > maxPtoC || distanceB > maxPtoC || distanceC > maxPtoC) continue;
-            //if (area < 0.1) continue;       
-            //if (area > maxArea) continue;
-            //if ((distanceA / maxPtoC)+(distanceB / maxPtoC)+(distanceC / maxPtoC) < .1) continue;
-
+            if (center.A > maxRadius || center.B > maxRadius || center.C > maxRadius) continue;
+                       
             var AB = { x: (A.pos.x + B.pos.x) / 2, y: (A.pos.y + B.pos.y) / 2 },
 
                 BC = { x: (B.pos.x + C.pos.x) / 2, y: (B.pos.y + C.pos.y) / 2 },
 
-                CA = { x: (C.pos.x + A.pos.x) / 2, y: (C.pos.y + A.pos.y) / 2 },
-
-                A2c = Math.sqrt(Math.pow(A.pos.x - center.x, 2) + Math.pow(A.pos.y - center.y, 2)) * Math.sqrt(3) / 3,
-                B2c = Math.sqrt(Math.pow(B.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)) * Math.sqrt(3) / 3,
-                C2c = Math.sqrt(Math.pow(C.pos.x - center.x, 2) + Math.pow(B.pos.y - center.y, 2)) * Math.sqrt(3) / 3,
+                CA = { x: (C.pos.x + A.pos.x) / 2, y: (C.pos.y + A.pos.y) / 2 },                
 
                 gA = c.createLinearGradient(A.pos.x, A.pos.y, BC.x, BC.y),
                 gB = c.createLinearGradient(B.pos.x, B.pos.y, CA.x, CA.y),
                 gC = c.createLinearGradient(C.pos.x, C.pos.y, AB.x, AB.y),
 
-                //cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
-                //cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
-                //cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + (1 * (1 - (area / maxArea)))/3 + ")",
+                alphaA = 1-(center.A/maxRadius),
+                alphaB = 1-(center.B/maxRadius),        
+                alphaC = 1-(center.C/maxRadius);        
 
-                //cA = "rgba(" + A.r + "," + A.g + "," + A.b + ",1)",
-                //cB = "rgba(" + B.r + "," + B.g + "," + B.b + ",1)",
-                //cC = "rgba(" + C.r + "," + C.g + "," + C.b + ",1)",
+            if (alphaA > .5) alphaA *= (alphaA-.5)+1;            
+            if (alphaB > .5) alphaB *= (alphaB-.5)+1;            
+            if (alphaC > .5) alphaC *= (alphaC-.5)+1;            
 
-                cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + ((1 - (dA / maxDist))) + ")",
-                cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + ((1 - (dB / maxDist))) + ")",
-                cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + ((1 - (dC / maxDist))) + ")",
+            alphaA *= Math.min(alphaA, alphaB, alphaC);
+            alphaB *= Math.min(alphaA, alphaB, alphaC);
+            alphaC *= Math.min(alphaA, alphaB, alphaC);                       
 
+            var cA = "rgba(" + A.r + "," + A.g + "," + A.b + "," + alphaA + ")",
+                cB = "rgba(" + B.r + "," + B.g + "," + B.b + "," + alphaB + ")",
+                cC = "rgba(" + C.r + "," + C.g + "," + C.b + "," + alphaC + ")",
                 c0 = "rgba(0,0,0,0)";
 
-                /*
-                c.beginPath();
-                c.arc(A.pos.x, A.pos.y, 3, 0, 2 * Math.PI);
-                c.arc(B.pos.x, B.pos.y, 3, 0, 2 * Math.PI);
-                c.arc(C.pos.x, C.pos.y, 3, 0, 2 * Math.PI);
-                c.fillStyle = "rgba(127,127,127,1)";
-                c.fill();
-                */
+                c0 = "rgba(0,0,0,0)";                
 
             gA.addColorStop(0, cA);
             gA.addColorStop(1, c0);
@@ -234,12 +221,12 @@ function Render(c) {
             c.beginPath();
             c.moveTo(A.pos.x, A.pos.y);
 
-            //c.lineTo(B.pos.x, B.pos.y);
-            //c.lineTo(C.pos.x, C.pos.y);
+            c.lineTo(B.pos.x, B.pos.y);
+            c.lineTo(C.pos.x, C.pos.y);
 
-            c.quadraticCurveTo(center.x, center.y, B.pos.x, B.pos.y);
-            c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
-            c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
+            //c.quadraticCurveTo(center.x, center.y, B.pos.x, B.pos.y);
+            //c.quadraticCurveTo(center.x, center.y, C.pos.x, C.pos.y);
+            //c.quadraticCurveTo(center.x, center.y, A.pos.x, A.pos.y);
 
             c.fillStyle = gA;
             c.fill();
@@ -250,9 +237,6 @@ function Render(c) {
             c.fillStyle = gC;
             c.fill();
         }
-
-
-
     }
 };
 
